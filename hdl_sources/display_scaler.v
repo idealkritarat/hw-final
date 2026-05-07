@@ -68,13 +68,31 @@ module display_scaler (
 );
 
     // -----------------------------------------------------------------------
-    // Address calculation — pixel doubling
+    // Address calculation — Rotate 90 CW, Horizontal Mirror, 1.5x Scale, Center
     // -----------------------------------------------------------------------
-    wire [8:0]  buf_col = hcount[9:1];  // 0..319
-    wire [7:0]  buf_row = vcount[9:1];  // 0..239
+    // Center a 360x480 image on a 640x480 screen (offset X by 140)
+    wire valid_area = (hcount >= 10'd140 && hcount < 10'd500 && vcount < 10'd480);
+    wire [8:0] screen_x = hcount - 10'd140; // 0 to 359
+    
+    // Scale down from 360x480 to 240x320 using factor 171/256 (~0.667)
+    wire [16:0] scaled_x_full = screen_x * 8'd171;
+    wire [17:0] scaled_y_full = vcount   * 8'd171;
+    
+    // Extract integer part (right shift by 8)
+    wire [7:0] rot_x = scaled_x_full[15:8]; // 0 to 239
+    wire [8:0] rot_y = scaled_y_full[16:8]; // 0 to 319
+
+    // Mathematical transformation for "Rotate 90 CW + Horizontal Mirror":
+    // Original image: 320(W) x 240(H)
+    // Rotated + Mirrored coordinates map perfectly to:
+    // img_x = rot_y
+    // img_y = rot_x
+    wire [8:0] img_x = rot_y; // 0 to 319
+    wire [7:0] img_y = rot_x; // 0 to 239
 
     // Combinational address (drives BRAM; data available next cycle)
-    wire [16:0] addr_next = ({9'd0, buf_row} << 8) + ({9'd0, buf_row} << 6) + {8'd0, buf_col};
+    // addr = img_y * 320 + img_x = (img_y << 8) + (img_y << 6) + img_x
+    wire [16:0] addr_next = ({9'd0, img_y} << 8) + ({9'd0, img_y} << 6) + {8'd0, img_x};
 
     // -----------------------------------------------------------------------
     // Pipeline stage 1: register address and active (cycle 0 → cycle 1)
@@ -88,8 +106,8 @@ module display_scaler (
             active_d1 <= 1'b0;
             active_d2 <= 1'b0;
         end else begin
-            rd_addr   <= active ? addr_next : 17'd0;
-            active_d1 <= active;
+            rd_addr   <= (active && valid_area) ? addr_next : 17'd0;
+            active_d1 <= (active && valid_area);
             active_d2 <= active_d1;
         end
     end
