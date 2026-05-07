@@ -33,29 +33,29 @@ module ov7670_config (
     // Computed combinationally from sw, latched at config time via ROM read
     // -----------------------------------------------------------------------
 
-    // COM14 from sw[10:9]
+    // COM14 from sw[10:9] — Default (00) = current working zoom config
     reg [7:0] cfg_com14;
     always @(*) begin
         case (sw[10:9])
-            2'b00: cfg_com14 = 8'h00;  // Auto mode (no manual scaling)
-            2'b01: cfg_com14 = 8'h08;  // Manual scaling only
-            2'b10: cfg_com14 = 8'h11;  // PCLK scaling + manual
-            2'b11: cfg_com14 = 8'h19;  // Full manual + PCLK div (current)
+            2'b00: cfg_com14 = 8'h19;  // Current (zoom works, but green)
+            2'b01: cfg_com14 = 8'h18;  // DCW PCLK + manual, NO divider
+            2'b10: cfg_com14 = 8'h08;  // Manual scaling only
+            2'b11: cfg_com14 = 8'h00;  // Auto mode (may zoom back)
         endcase
     end
 
-    // COM9 gain ceiling from sw[12:11]
+    // COM9 gain ceiling from sw[12:11] — Default (00) = current
     reg [7:0] cfg_com9;
     always @(*) begin
         case (sw[12:11])
-            2'b00: cfg_com9 = 8'h18;   // 4x gain
-            2'b01: cfg_com9 = 8'h38;   // 8x gain
-            2'b10: cfg_com9 = 8'h48;   // 16x gain
-            2'b11: cfg_com9 = 8'h6a;   // 64x gain (current)
+            2'b00: cfg_com9 = 8'h6a;   // 64x gain (current)
+            2'b01: cfg_com9 = 8'h48;   // 16x gain
+            2'b10: cfg_com9 = 8'h38;   // 8x gain
+            2'b11: cfg_com9 = 8'h18;   // 4x gain
         endcase
     end
 
-    // Color matrix preset from sw[14:13]
+    // Color matrix preset from sw[14:13] — Default (00) = current
     reg [7:0] cfg_mtx1, cfg_mtx2, cfg_mtx3, cfg_mtx4, cfg_mtx5, cfg_mtx6;
     always @(*) begin
         case (sw[14:13])
