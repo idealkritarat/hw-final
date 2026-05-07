@@ -122,14 +122,14 @@ module ov7670_config (
             7'd23: current_reg = {8'h52, cfg_mtx4}; // MTX4
             7'd24: current_reg = {8'h53, cfg_mtx5}; // MTX5
             7'd25: current_reg = {8'h54, cfg_mtx6}; // MTX6
-            7'd26: current_reg = {8'h58, 8'h9e};    // MTXS
+            7'd26: current_reg = {8'h58, 8'h5e};    // MTXS: 0x5E = Manual Matrix Enable (forces saturation)
 
             // 6. AEC/AGC/AWB
             7'd27: current_reg = {8'h13, 8'hef}; // COM8: Enable AEC, AGC, AWB
             7'd28: current_reg = {8'h00, 8'h00}; // GAIN
             7'd29: current_reg = {8'h10, 8'h00}; // AECH
             7'd30: current_reg = {8'h0d, 8'h40}; // COM4
-            7'd31: current_reg = {8'h14, cfg_com9}; // COM9: *** SWITCH sw[12:11] ***
+            7'd31: current_reg = {8'h14, cfg_com9}; // COM9: *** SWITCH sw[12:11] *** (Gain ceiling to reduce noise)
             7'd32: current_reg = {8'h24, 8'h95}; // AEW
             7'd33: current_reg = {8'h25, 8'h33}; // AEB
             7'd34: current_reg = {8'h26, 8'he3}; // VPT
@@ -153,28 +153,29 @@ module ov7670_config (
             7'd50: current_reg = {8'h89, 8'he8};
 
             // 8. DSP & Denoise
-            7'd51: current_reg = {8'h41, 8'h08}; // COM16: Denoise enable
+            7'd51: current_reg = {8'h41, 8'h38}; // COM16: Denoise + Edge enhancement + AWB gain ENABLED
             7'd52: current_reg = {8'h76, 8'he1}; // OV
             7'd53: current_reg = {8'h33, 8'h0b}; // CHLF
             7'd54: current_reg = {8'h3c, 8'h78}; // COM12
             7'd55: current_reg = {8'h69, 8'h00}; // GFIX
             7'd56: current_reg = {8'h74, 8'h00}; // REG74
             7'd57: current_reg = {8'hb0, 8'h84}; // T_ELB
-            7'd58: current_reg = {8'hb1, 8'h00}; // Reserved
+            7'd58: current_reg = {8'hb1, 8'h0c}; // ABLC1
             7'd59: current_reg = {8'hb2, 8'h0e}; // Reserved
             7'd60: current_reg = {8'hb3, 8'h82}; // Reserved
 
             // 9. Saturation & Contrast
-            7'd61: current_reg = {8'h67, 8'h80}; // U gain
-            7'd62: current_reg = {8'h68, 8'h80}; // V gain
+            7'd61: current_reg = {8'h67, 8'hc0}; // U gain (Saturation Boost)
+            7'd62: current_reg = {8'h68, 8'hc0}; // V gain (Saturation Boost)
             7'd63: current_reg = {8'h56, 8'h40}; // Contrast
             
-            // 10. Frame Stability
+            // 10. Frame Stability & Color
             7'd64: current_reg = {8'h15, 8'h00}; // COM10
             7'd65: current_reg = {8'h13, 8'hef}; // COM8 repeat
             7'd66: current_reg = {8'h0e, 8'h61}; // COM6
             7'd67: current_reg = {8'h16, 8'h00}; // Reserved
             7'd68: current_reg = {8'h1e, 8'h07}; // MVFP
+            7'd69: current_reg = {8'h3d, 8'hc0}; // COM13: Gamma Enable (Boosts color contrast)
             
             default: current_reg = {8'hFF, 8'hFF};
         endcase
