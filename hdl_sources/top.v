@@ -156,6 +156,7 @@ module top (
         .sccb_start(sccb_start),
         .reg_addr  (sccb_reg_addr),
         .reg_data  (sccb_reg_data),
+        .sw        (sw),
         .cfg_done  (cfg_done)
     );
 
