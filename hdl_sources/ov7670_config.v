@@ -45,34 +45,36 @@ module ov7670_config (
 
     // -----------------------------------------------------------------------
     // Register ROM — {addr, data} pairs
-    // -----------------------------------------------------    localparam N_REGS = 70;
+    // -----------------------------------------------------------------------
     reg [15:0] current_reg;
     reg [6:0]  rom_idx;
 
     always @(*) begin
         case (rom_idx)
-            // 1. Soft Reset
+            // ---- 1. Soft Reset ----
             7'd0:  current_reg = {8'h12, 8'h80}; // COM7: soft reset
-            
-            // 2. Clocking & PLL (60fps Target)
-            7'd1:  current_reg = {8'h11, 8'h00}; // CLKRC: Internal clock = external clock (no divider)
-            7'd2:  current_reg = {8'h6b, 8'h4a}; // DBLV: PLL 4x (4 * 24MHz = 96MHz internal)
+
+            // ---- 2. Clocking & PLL (60fps @ 24 MHz XCLK) ----
+            7'd1:  current_reg = {8'h11, 8'h00}; // CLKRC: no prescaler
+            7'd2:  current_reg = {8'h6b, 8'h4a}; // DBLV: PLL x4
             7'd3:  current_reg = {8'h3b, 8'h0a}; // COM11: Night mode OFF
-            
-            // 3. Format & Scaling
-            7'd4:  current_reg = {8'h12, 8'h04}; // COM7: RGB565 + QVGA
-            7'd5:  current_reg = {8'h40, 8'hD0}; // COM15: RGB565 + Full Range
-            7'd6:  current_reg = {8'h3a, 8'h00}; // TSLB: DISABLE UV swap
-            7'd7:  current_reg = {8'h0c, 8'h04}; // COM3: Enable DCW
-            7'd8:  current_reg = {8'h3e, 8'h19}; // COM14: Enable PCLK scaling
-            7'd9:  current_reg = {8'h70, 8'h3a}; // SCALING_XSC
-            7'd10: current_reg = {8'h71, 8'h35}; // SCALING_YSC
-            7'd11: current_reg = {8'h72, 8'h11}; // SCALING_DCWCTR
-            7'd12: current_reg = {8'h73, 8'hf1}; // SCALING_PCLK_DIV
-            7'd13: current_reg = {8'ha2, 8'h02}; // SCALING_PCLK_DELAY
-            7'd14: current_reg = {8'h3d, 8'h8f}; // COM13: ENABLE MATRIX + GAMMA + AWB
-            
-            // 4. Windowing (Center the image)
+
+            // ---- 3. Output Format ----
+            7'd4:  current_reg = {8'h12, 8'h04}; // COM7: RGB + QVGA
+            7'd5:  current_reg = {8'h40, 8'hD0}; // COM15: RGB565, full range [00-FF]
+            7'd6:  current_reg = {8'h3a, 8'h04}; // TSLB: normal byte order
+            7'd7:  current_reg = {8'h3d, 8'hC0}; // COM13: Gamma ON, UV auto-adjust ON
+
+            // ---- 4. Scaling & DCW (fixes zoom) ----
+            7'd8:  current_reg = {8'h0c, 8'h04}; // COM3: enable DCW
+            7'd9:  current_reg = {8'h3e, 8'h19}; // COM14: PCLK scaling + manual DCW
+            7'd10: current_reg = {8'h70, 8'h3a}; // SCALING_XSC
+            7'd11: current_reg = {8'h71, 8'h35}; // SCALING_YSC
+            7'd12: current_reg = {8'h72, 8'h11}; // SCALING_DCWCTR
+            7'd13: current_reg = {8'h73, 8'hf1}; // SCALING_PCLK_DIV
+            7'd14: current_reg = {8'ha2, 8'h02}; // SCALING_PCLK_DELAY
+
+            // ---- 5. Windowing ----
             7'd15: current_reg = {8'h17, 8'h13}; // HSTART
             7'd16: current_reg = {8'h18, 8'h01}; // HSTOP
             7'd17: current_reg = {8'h32, 8'hbf}; // HREF
@@ -80,7 +82,7 @@ module ov7670_config (
             7'd19: current_reg = {8'h1a, 8'h7a}; // VSTOP
             7'd20: current_reg = {8'h03, 8'h0a}; // VREF
 
-            // 5. Color Matrix (Natural Colors Fix)
+            // ---- 6. Color Matrix (Standard OV7670 for RGB) ----
             7'd21: current_reg = {8'h4f, 8'h80}; // MTX1
             7'd22: current_reg = {8'h50, 8'h80}; // MTX2
             7'd23: current_reg = {8'h51, 8'h00}; // MTX3
@@ -89,60 +91,58 @@ module ov7670_config (
             7'd26: current_reg = {8'h54, 8'h80}; // MTX6
             7'd27: current_reg = {8'h58, 8'h9e}; // MTXS
 
-            // 6. AEC/AGC/AWB (Auto Controls)
-            7'd28: current_reg = {8'h13, 8'hef}; // COM8: Enable AEC, AGC, AWB
-            7'd29: current_reg = {8'h00, 8'h00}; // GAIN
-            7'd30: current_reg = {8'h10, 8'h00}; // AECH
-            7'd31: current_reg = {8'h0d, 8'h40}; // COM4
-            7'd32: current_reg = {8'h14, 8'h4a}; // COM9: Balanced Gain
-            7'd33: current_reg = {8'h24, 8'h95}; // AEW
-            7'd34: current_reg = {8'h25, 8'h33}; // AEB
-            7'd35: current_reg = {8'h26, 8'he3}; // VPT
-            7'd36: current_reg = {8'h42, 8'h08}; // COM17: Lens Shading Off for now, Color Bar off
+            // ---- 7. AEC / AGC / AWB ----
+            7'd28: current_reg = {8'h13, 8'hE7}; // COM8: AEC+AGC+AWB ON
+            7'd29: current_reg = {8'h14, 8'h4a}; // COM9: AGC gain ceiling
+            7'd30: current_reg = {8'h24, 8'h95}; // AEW
+            7'd31: current_reg = {8'h25, 8'h33}; // AEB
+            7'd32: current_reg = {8'h26, 8'he3}; // VPT
 
-            // 7. Gamma Curve Settings
-            7'd37: current_reg = {8'h7a, 8'h20};
-            7'd38: current_reg = {8'h7b, 8'h10};
-            7'd39: current_reg = {8'h7c, 8'h1e};
-            7'd40: current_reg = {8'h7d, 8'h35};
-            7'd41: current_reg = {8'h7e, 8'h5a};
-            7'd42: current_reg = {8'h7f, 8'h69};
-            7'd43: current_reg = {8'h80, 8'h76};
-            7'd44: current_reg = {8'h81, 8'h80};
-            7'd45: current_reg = {8'h82, 8'h88};
-            7'd46: current_reg = {8'h83, 8'h8f};
-            7'd47: current_reg = {8'h84, 8'h96};
-            7'd48: current_reg = {8'h85, 8'ha3};
-            7'd49: current_reg = {8'h86, 8'haf};
-            7'd50: current_reg = {8'h87, 8'hc4};
-            7'd51: current_reg = {8'h88, 8'hd7};
-            7'd52: current_reg = {8'h89, 8'he8};
+            // ---- 8. White Balance Gains (fight green tint) ----
+            7'd33: current_reg = {8'h01, 8'h50}; // BLUE channel gain
+            7'd34: current_reg = {8'h02, 8'h68}; // RED  channel gain
+            7'd35: current_reg = {8'h6c, 8'h0a}; // AWB Control 1
+            7'd36: current_reg = {8'h6d, 8'h55}; // AWB Control 2
+            7'd37: current_reg = {8'h6e, 8'h11}; // AWB Control 3
+            7'd38: current_reg = {8'h6f, 8'h9f}; // AWB Control 4
+            7'd39: current_reg = {8'h6a, 8'h40}; // GGAIN: Green channel gain
 
-            // 8. DSP & Denoise
-            7'd53: current_reg = {8'h41, 8'h08}; // COM16: Denoise enable
-            7'd54: current_reg = {8'h76, 8'he1}; // OV
-            7'd55: current_reg = {8'h33, 8'h0b}; // CHLF
-            7'd56: current_reg = {8'h3c, 8'h78}; // COM12
-            7'd57: current_reg = {8'h69, 8'h00}; // GFIX
-            7'd58: current_reg = {8'h74, 8'h00}; // REG74
-            7'd59: current_reg = {8'hb0, 8'h84}; // T_ELB
-            7'd60: current_reg = {8'hb1, 8'h00}; // Reserved
-            7'd61: current_reg = {8'hb2, 8'h0e}; // Reserved
-            7'd62: current_reg = {8'hb3, 8'h82}; // Reserved
+            // ---- 9. Gamma Curve ----
+            7'd40: current_reg = {8'h7a, 8'h20};
+            7'd41: current_reg = {8'h7b, 8'h10};
+            7'd42: current_reg = {8'h7c, 8'h1e};
+            7'd43: current_reg = {8'h7d, 8'h35};
+            7'd44: current_reg = {8'h7e, 8'h5a};
+            7'd45: current_reg = {8'h7f, 8'h69};
+            7'd46: current_reg = {8'h80, 8'h76};
+            7'd47: current_reg = {8'h81, 8'h80};
+            7'd48: current_reg = {8'h82, 8'h88};
+            7'd49: current_reg = {8'h83, 8'h8f};
+            7'd50: current_reg = {8'h84, 8'h96};
+            7'd51: current_reg = {8'h85, 8'ha3};
+            7'd52: current_reg = {8'h86, 8'haf};
+            7'd53: current_reg = {8'h87, 8'hc4};
+            7'd54: current_reg = {8'h88, 8'hd7};
+            7'd55: current_reg = {8'h89, 8'he8};
 
-            // 9. Saturation & Contrast
-            7'd63: current_reg = {8'h67, 8'hc0}; // U gain (Saturation Boost)
-            7'd64: current_reg = {8'h68, 8'hc0}; // V gain (Saturation Boost)
-            7'd65: current_reg = {8'h56, 8'h40}; // Contrast
-            
-            // 10. Frame Stability Fixes
-            7'd66: current_reg = {8'h15, 8'h00}; // COM10: VSYNC edge, etc.
-            7'd67: current_reg = {8'h13, 8'hef}; // COM8 repeat
-            7'd68: current_reg = {8'h0e, 8'h61}; // COM6
-            7'd69: current_reg = {8'h16, 8'h00}; // Reserved
-            7'd70: current_reg = {8'h1e, 8'h07}; // MVFP: Mirror/Flip/ MVFP: Mirror/Flip
-            
-            default: current_reg = {8'hFF, 8'hFF};
+            // ---- 10. DSP & Denoise ----
+            7'd56: current_reg = {8'h41, 8'h08}; // COM16: Denoise ON
+            7'd57: current_reg = {8'h3c, 8'h78}; // COM12
+            7'd58: current_reg = {8'h69, 8'h00}; // GFIX
+            7'd59: current_reg = {8'h74, 8'h00}; // REG74
+
+            // ---- 11. Saturation & Contrast ----
+            7'd60: current_reg = {8'h67, 8'hC0}; // U saturation gain
+            7'd61: current_reg = {8'h68, 8'hC0}; // V saturation gain
+            7'd62: current_reg = {8'h56, 8'h40}; // Contrast
+
+            // ---- 12. Misc / Stability ----
+            7'd63: current_reg = {8'h15, 8'h00}; // COM10
+            7'd64: current_reg = {8'h0e, 8'h61}; // COM5
+            7'd65: current_reg = {8'h42, 8'h00}; // COM17: Color bar OFF
+            7'd66: current_reg = {8'h1e, 8'h07}; // MVFP: Mirror + VFlip
+
+            default: current_reg = {8'hFF, 8'hFF}; // sentinel
         endcase
     end
 
