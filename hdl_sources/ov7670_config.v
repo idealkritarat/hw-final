@@ -33,14 +33,14 @@ module ov7670_config (
     // Computed combinationally from sw, latched at config time via ROM read
     // -----------------------------------------------------------------------
 
-    // COM14 from sw[10:9] — Default (00) = current working zoom config (0x19)
+    // COM14 from sw[10:9] — Default (00) = NO internal scaling
     reg [7:0] cfg_com14;
     always @(*) begin
         case (sw[10:9])
-            2'b00: cfg_com14 = 8'h19;  // PCLK scaling (correct for QVGA)
-            2'b01: cfg_com14 = 8'h18;  // DCW PCLK + manual, NO divider
-            2'b10: cfg_com14 = 8'h08;  // Manual scaling only
-            2'b11: cfg_com14 = 8'h00;  // Auto mode
+            2'b00: cfg_com14 = 8'h00;  // Auto/VGA mode (hardware handles scaling!)
+            2'b01: cfg_com14 = 8'h08;  // Manual scaling only
+            2'b10: cfg_com14 = 8'h11;  // PCLK scaling
+            2'b11: cfg_com14 = 8'h19;  // PCLK scaling + manual
         endcase
     end
 
@@ -96,10 +96,10 @@ module ov7670_config (
             7'd3:  current_reg = {8'h3b, 8'h0a}; // COM11: Night mode OFF
             
             // 3. Format & Scaling
-            7'd4:  current_reg = {8'h12, 8'h14}; // COM7: RGB565 + QVGA (0x14 = QVGA enable + RGB)
+            7'd4:  current_reg = {8'h12, 8'h04}; // COM7: RGB565 (VGA mode natively)
             7'd5:  current_reg = {8'h40, 8'hD0}; // COM15: RGB565 + Full Range
             7'd6:  current_reg = {8'h3a, 8'h04}; // TSLB
-            7'd7:  current_reg = {8'h0c, 8'h04}; // COM3: Enable DCW
+            7'd7:  current_reg = {8'h0c, 8'h00}; // COM3: DCW disable
             7'd8:  current_reg = {8'h3e, cfg_com14}; // COM14: *** SWITCH sw[10:9] ***
             7'd9:  current_reg = {8'h70, 8'h3a}; // SCALING_XSC
             7'd10: current_reg = {8'h71, 8'h35}; // SCALING_YSC
