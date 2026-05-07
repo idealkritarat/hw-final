@@ -33,29 +33,29 @@ module ov7670_config (
     // Computed combinationally from sw, latched at config time via ROM read
     // -----------------------------------------------------------------------
 
-    // COM14 from sw[10:9] — Default (00) = current working zoom config
+    // COM14 from sw[10:9] — Default (00) = current working zoom config (0x19)
     reg [7:0] cfg_com14;
     always @(*) begin
         case (sw[10:9])
-            2'b00: cfg_com14 = 8'h19;  // Current (zoom works, but green)
+            2'b00: cfg_com14 = 8'h19;  // PCLK scaling (correct for QVGA)
             2'b01: cfg_com14 = 8'h18;  // DCW PCLK + manual, NO divider
             2'b10: cfg_com14 = 8'h08;  // Manual scaling only
-            2'b11: cfg_com14 = 8'h00;  // Auto mode (may zoom back)
+            2'b11: cfg_com14 = 8'h00;  // Auto mode
         endcase
     end
 
-    // COM9 gain ceiling from sw[12:11] — Default (00) = current
+    // COM9 gain ceiling from sw[12:11] — Default (00) = 8x gain (balanced)
     reg [7:0] cfg_com9;
     always @(*) begin
         case (sw[12:11])
-            2'b00: cfg_com9 = 8'h6a;   // 64x gain (current)
-            2'b01: cfg_com9 = 8'h48;   // 16x gain
-            2'b10: cfg_com9 = 8'h38;   // 8x gain
-            2'b11: cfg_com9 = 8'h18;   // 4x gain
+            2'b00: cfg_com9 = 8'h38;   // 8x gain (default, bright enough but stable)
+            2'b01: cfg_com9 = 8'h18;   // 4x gain
+            2'b10: cfg_com9 = 8'h48;   // 16x gain
+            2'b11: cfg_com9 = 8'h6a;   // 64x gain (extreme)
         endcase
     end
 
-    // Color matrix preset from sw[14:13] — Default (00) = current
+    // Color matrix preset from sw[14:13] — Default (00) = current good matrix
     reg [7:0] cfg_mtx1, cfg_mtx2, cfg_mtx3, cfg_mtx4, cfg_mtx5, cfg_mtx6;
     always @(*) begin
         case (sw[14:13])
@@ -96,7 +96,7 @@ module ov7670_config (
             7'd3:  current_reg = {8'h3b, 8'h0a}; // COM11: Night mode OFF
             
             // 3. Format & Scaling
-            7'd4:  current_reg = {8'h12, 8'h04}; // COM7: RGB565 + QVGA
+            7'd4:  current_reg = {8'h12, 8'h14}; // COM7: RGB565 + QVGA (0x14 = QVGA enable + RGB)
             7'd5:  current_reg = {8'h40, 8'hD0}; // COM15: RGB565 + Full Range
             7'd6:  current_reg = {8'h3a, 8'h04}; // TSLB
             7'd7:  current_reg = {8'h0c, 8'h04}; // COM3: Enable DCW
