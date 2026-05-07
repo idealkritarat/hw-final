@@ -22,61 +22,8 @@ module ov7670_config (
     output reg  [7:0]  reg_addr,
     output reg  [7:0]  reg_data,
 
-    // Switch inputs for color tuning (active at reset)
-    input  wire [15:0] sw,
-
     output reg         cfg_done
 );
-
-    // -----------------------------------------------------------------------
-    // Switch-decoded configuration values
-    // Computed combinationally from sw, latched at config time via ROM read
-    // -----------------------------------------------------------------------
-
-    // COM14 from sw[10:9] — Default (00) = NO internal scaling
-    reg [7:0] cfg_com14;
-    always @(*) begin
-        case (sw[10:9])
-            2'b00: cfg_com14 = 8'h00;  // Auto/VGA mode (hardware handles scaling!)
-            2'b01: cfg_com14 = 8'h08;  // Manual scaling only
-            2'b10: cfg_com14 = 8'h11;  // PCLK scaling
-            2'b11: cfg_com14 = 8'h19;  // PCLK scaling + manual
-        endcase
-    end
-
-    // COM9 gain ceiling from sw[12:11] — Default (00) = 8x gain (balanced)
-    reg [7:0] cfg_com9;
-    always @(*) begin
-        case (sw[12:11])
-            2'b00: cfg_com9 = 8'h38;   // 8x gain (default, bright enough but stable)
-            2'b01: cfg_com9 = 8'h18;   // 4x gain
-            2'b10: cfg_com9 = 8'h48;   // 16x gain
-            2'b11: cfg_com9 = 8'h6a;   // 64x gain (extreme)
-        endcase
-    end
-
-    // Color matrix preset from sw[14:13] — Default (00) = current good matrix
-    reg [7:0] cfg_mtx1, cfg_mtx2, cfg_mtx3, cfg_mtx4, cfg_mtx5, cfg_mtx6;
-    always @(*) begin
-        case (sw[14:13])
-            2'b00: begin // Preset A: Current (was "SO close")
-                cfg_mtx1 = 8'hb3; cfg_mtx2 = 8'hb3; cfg_mtx3 = 8'h00;
-                cfg_mtx4 = 8'h3d; cfg_mtx5 = 8'ha7; cfg_mtx6 = 8'he4;
-            end
-            2'b01: begin // Preset B: Standard balanced
-                cfg_mtx1 = 8'h80; cfg_mtx2 = 8'h80; cfg_mtx3 = 8'h00;
-                cfg_mtx4 = 8'h22; cfg_mtx5 = 8'h5e; cfg_mtx6 = 8'h80;
-            end
-            2'b10: begin // Preset C: OV7670 datasheet defaults
-                cfg_mtx1 = 8'h40; cfg_mtx2 = 8'h34; cfg_mtx3 = 8'h0c;
-                cfg_mtx4 = 8'h17; cfg_mtx5 = 8'h29; cfg_mtx6 = 8'h40;
-            end
-            2'b11: begin // Preset D: High saturation vivid
-                cfg_mtx1 = 8'hc0; cfg_mtx2 = 8'hc0; cfg_mtx3 = 8'h00;
-                cfg_mtx4 = 8'h33; cfg_mtx5 = 8'h80; cfg_mtx6 = 8'hc0;
-            end
-        endcase
-    end
 
     // -----------------------------------------------------------------------
     // Register ROM — {addr, data} pairs
@@ -100,7 +47,7 @@ module ov7670_config (
             7'd5:  current_reg = {8'h40, 8'hD0}; // COM15: RGB565 + Full Range
             7'd6:  current_reg = {8'h3a, 8'h04}; // TSLB
             7'd7:  current_reg = {8'h0c, 8'h00}; // COM3: DCW disable
-            7'd8:  current_reg = {8'h3e, cfg_com14}; // COM14: *** SWITCH sw[10:9] ***
+            7'd8:  current_reg = {8'h3e, 8'h00}; // COM14: No internal scaling
             7'd9:  current_reg = {8'h70, 8'h3a}; // SCALING_XSC
             7'd10: current_reg = {8'h71, 8'h35}; // SCALING_YSC
             7'd11: current_reg = {8'h72, 8'h11}; // SCALING_DCWCTR
@@ -115,21 +62,21 @@ module ov7670_config (
             7'd18: current_reg = {8'h1a, 8'h7a}; // VSTOP
             7'd19: current_reg = {8'h03, 8'h0a}; // VREF
 
-            // 5. Color Matrix — *** SWITCH sw[14:13] ***
-            7'd20: current_reg = {8'h4f, cfg_mtx1}; // MTX1
-            7'd21: current_reg = {8'h50, cfg_mtx2}; // MTX2
-            7'd22: current_reg = {8'h51, cfg_mtx3}; // MTX3
-            7'd23: current_reg = {8'h52, cfg_mtx4}; // MTX4
-            7'd24: current_reg = {8'h53, cfg_mtx5}; // MTX5
-            7'd25: current_reg = {8'h54, cfg_mtx6}; // MTX6
-            7'd26: current_reg = {8'h58, 8'h5e};    // MTXS: 0x5E = Manual Matrix Enable (forces saturation)
+            // 5. Color Matrix (Natural Colors High Saturation)
+            7'd20: current_reg = {8'h4f, 8'hb3}; // MTX1
+            7'd21: current_reg = {8'h50, 8'hb3}; // MTX2
+            7'd22: current_reg = {8'h51, 8'h00}; // MTX3
+            7'd23: current_reg = {8'h52, 8'h3d}; // MTX4
+            7'd24: current_reg = {8'h53, 8'ha7}; // MTX5
+            7'd25: current_reg = {8'h54, 8'he4}; // MTX6
+            7'd26: current_reg = {8'h58, 8'h5e}; // MTXS: 0x5E = Manual Matrix Enable
 
             // 6. AEC/AGC/AWB
             7'd27: current_reg = {8'h13, 8'hef}; // COM8: Enable AEC, AGC, AWB
             7'd28: current_reg = {8'h00, 8'h00}; // GAIN
             7'd29: current_reg = {8'h10, 8'h00}; // AECH
             7'd30: current_reg = {8'h0d, 8'h40}; // COM4
-            7'd31: current_reg = {8'h14, cfg_com9}; // COM9: *** SWITCH sw[12:11] *** (Gain ceiling to reduce noise)
+            7'd31: current_reg = {8'h14, 8'h38}; // COM9: 8x Gain Ceiling
             7'd32: current_reg = {8'h24, 8'h95}; // AEW
             7'd33: current_reg = {8'h25, 8'h33}; // AEB
             7'd34: current_reg = {8'h26, 8'he3}; // VPT

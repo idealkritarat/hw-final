@@ -30,7 +30,6 @@ module top (
     // System
     input  wire        clk_100mhz,   // W5
     input  wire        rst,           // BTNC (U18), active-high
-    input  wire        btnu,          // BTNU (T18) for byte swap
 
     // OV7670 camera
 
@@ -51,8 +50,8 @@ module top (
     output wire        vga_hsync,
     output wire        vga_vsync,
 
-    // Filter and Debug switches
-    input  wire [15:0] sw,
+    // Slide Switches (Only 2 needed for filter selection)
+    input  wire [1:0]  sw,
 
     // Diagnostic LEDs
     output wire [2:0]  led
@@ -156,7 +155,6 @@ module top (
         .sccb_start(sccb_start),
         .reg_addr  (sccb_reg_addr),
         .reg_data  (sccb_reg_data),
-        .sw        (sw),
         .cfg_done  (cfg_done)
     );
 
@@ -177,24 +175,9 @@ module top (
         .wr_en     (wr_en),
         .wr_addr   (wr_addr),
         .wr_data   (wr_data),
-        .frame_done(frame_done),
-        .byte_swap (sw[15])    // Keep the R2 swap button
+        .frame_done(frame_done)
     );
 
-
-
-
-
-    // Byte Swap Toggle Logic (BTNU)
-    reg byte_swap_reg = 1'b1; // Default to 1 based on user testing
-
-    reg btnu_prev = 1'b0;
-    always @(posedge clk_100mhz) begin
-        btnu_prev <= btnu;
-        if (btnu && !btnu_prev) begin
-            byte_swap_reg <= ~byte_swap_reg;
-        end
-    end
 
 
     // -----------------------------------------------------------------------

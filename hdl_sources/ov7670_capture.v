@@ -16,8 +16,7 @@ module ov7670_capture #(
     output reg         wr_en,
     output reg  [16:0] wr_addr,
     output reg  [15:0] wr_data,
-    output reg         frame_done,
-    input  wire        byte_swap
+    output reg         frame_done
 );
 
     localparam FRAME_PIXELS = FRAME_WIDTH * FRAME_HEIGHT;
@@ -72,7 +71,7 @@ module ov7670_capture #(
                     // We have a full 16-bit pixel!
                     // Downscale 640x480 to 320x240 by skipping odd pixels and odd lines
                     if (h_cnt[0] == 1'b0 && v_cnt[0] == 1'b0) begin
-                        wr_data <= byte_swap ? {cam_d, first_byte} : {first_byte, cam_d};
+                        wr_data <= {first_byte, cam_d};
                         
                         if (wr_addr < FRAME_PIXELS) begin
                             wr_en   <= 1'b1;
