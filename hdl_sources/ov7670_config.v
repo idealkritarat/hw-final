@@ -61,8 +61,8 @@ module ov7670_config (
             
             // 3. Format & Scaling
             7'd4:  current_reg = {8'h12, 8'h04}; // COM7: RGB565 + QVGA
-            7'd5:  current_reg = {8'h40, 8'hD0}; // COM15: RGB565 + Full Range
-            7'd6:  current_reg = {8'h3a, 8'h04}; // TSLB: Output sequence selection
+            7'd5:  current_reg = {8'h40, 8'hd0}; // COM15: RGB565 + Full Range
+            7'd6:  current_reg = {8'h3a, 8'h0c}; // TSLB: UV Swap + Sequence Selection
             7'd7:  current_reg = {8'h0c, 8'h04}; // COM3: Enable DCW
             7'd8:  current_reg = {8'h3e, 8'h19}; // COM14: Enable PCLK scaling
             7'd9:  current_reg = {8'h70, 8'h3a}; // SCALING_XSC
@@ -80,13 +80,13 @@ module ov7670_config (
             7'd19: current_reg = {8'h03, 8'h0a}; // VREF
 
             // 5. Color Matrix (Natural Colors Fix)
-            7'd20: current_reg = {8'h4f, 8'hb3}; // MTX1
-            7'd21: current_reg = {8'h50, 8'hb3}; // MTX2
+            7'd20: current_reg = {8'h4f, 8'h80}; // MTX1
+            7'd21: current_reg = {8'h50, 8'h80}; // MTX2
             7'd22: current_reg = {8'h51, 8'h00}; // MTX3
-            7'd23: current_reg = {8'h52, 8'h3d}; // MTX4
-            7'd24: current_reg = {8'h53, 8'ha7}; // MTX5
-            7'd25: current_reg = {8'h54, 8'he4}; // MTX6
-            7'd26: current_reg = {8'h58, 8'h9e}; // MTXS
+            7'd23: current_reg = {8'h52, 8'h22}; // MTX4
+            7'd24: current_reg = {8'h53, 8'h5e}; // MTX5
+            7'd25: current_reg = {8'h54, 8'h80}; // MTX6
+            7'd26: current_reg = {8'h58, 8'h9e}; // MTXS (Sign bit)
 
             // 6. AEC/AGC/AWB (Auto Controls)
             7'd27: current_reg = {8'h13, 8'hef}; // COM8: Enable AEC, AGC, AWB
@@ -129,15 +129,15 @@ module ov7670_config (
             7'd60: current_reg = {8'hb3, 8'h82}; // Reserved
 
             // 9. Saturation & Contrast
-            7'd61: current_reg = {8'h67, 8'h80}; // U gain (Manual saturation)
-            7'd62: current_reg = {8'h68, 8'h80}; // V gain (Manual saturation)
-            7'd63: current_reg = {8'h56, 8'h40}; // Contrast
+            7'd61: current_reg = {8'h67, 8'hc0}; // U gain (Manual saturation - Vivid)
+            7'd62: current_reg = {8'h68, 8'hc0}; // V gain (Manual saturation - Vivid)
+            7'd63: current_reg = {8'h56, 8'h50}; // Contrast
             
             // 10. Frame Stability Fixes
-            7'd64: current_reg = {8'h15, 8'h00}; // COM10: VSYNC edge, etc.
-            7'd65: current_reg = {8'h13, 8'hef}; // COM8 repeat
+            7'd64: current_reg = {8'h15, 8'h00}; // COM10
+            7'd65: current_reg = {8'h3d, 8'h88}; // COM13: Gamma + UV Swap + AWB
             7'd66: current_reg = {8'h0e, 8'h61}; // COM6
-            7'd67: current_reg = {8'h16, 8'h00}; // Reserved
+            7'd67: current_reg = {8'h16, 8'h02}; // Reserved
             7'd68: current_reg = {8'h1e, 8'h07}; // MVFP: Mirror/Flip
             
             default: current_reg = {8'hFF, 8'hFF};
