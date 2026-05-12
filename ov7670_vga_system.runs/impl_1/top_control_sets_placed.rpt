@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2025.2 (lin64) Build 6299465 Fri Nov 14 12:34:56 MST 2025
-| Date         : Tue May 12 12:47:09 2026
+| Date         : Tue May 12 13:10:25 2026
 | Host         : docker-desktop running 64-bit Ubuntu"
 VERSION_ID="22.04 22.04.5 LTS (Jammy Jellyfish)"
 VERSION_CODENAME=jammy
@@ -83,17 +83,17 @@ Table of Contents
 |  clk_100mhz_IBUF_BUFG    | u_sccb/state[0]                 | global_rst                 |                1 |              4 |         4.00 |
 |  clk_100mhz_IBUF_BUFG    | u_sccb/bit_cnt[0]               | global_rst                 |                1 |              4 |         4.00 |
 |  clk_100mhz_IBUF_BUFG    | u_cfg/rom_idx[0]                | global_rst                 |                3 |              7 |         2.33 |
-|  clk_100mhz_IBUF_BUFG    |                                 | u_sccb/clk_cnt[7]_i_1_n_0  |                3 |              8 |         2.67 |
 | ~cam_pclk_IBUF_BUFG      | u_capture/first_byte[7]_i_1_n_0 |                            |                4 |              8 |         2.00 |
-|  clk_100mhz_IBUF_BUFG    | u_sccb/tx_byte_0[0]             | global_rst                 |                3 |              8 |         2.67 |
+|  clk_100mhz_IBUF_BUFG    |                                 | u_sccb/clk_cnt[7]_i_1_n_0  |                3 |              8 |         2.67 |
 |  clk_100mhz_IBUF_BUFG    |                                 | global_rst                 |                6 |              8 |         1.33 |
-| ~cam_pclk_IBUF_BUFG      | u_capture/v_cnt0                | u_capture/v_cnt[0]         |                4 |             10 |         2.50 |
+|  clk_100mhz_IBUF_BUFG    | u_sccb/tx_byte_0[0]             | global_rst                 |                3 |              8 |         2.67 |
 | ~cam_pclk_IBUF_BUFG      | u_capture/byte_cnt              | u_capture/h_cnt[9]_i_1_n_0 |                3 |             10 |         3.33 |
-|  u_clk_wiz/inst/clk_out1 |                                 | u_vga/hcount[9]_i_1_n_0    |                5 |             10 |         2.00 |
+| ~cam_pclk_IBUF_BUFG      | u_capture/v_cnt0                | u_capture/v_cnt[0]         |                4 |             10 |         2.50 |
 |  u_clk_wiz/inst/clk_out1 | u_vga/E[0]                      | pix_rst                    |                4 |             10 |         2.50 |
-|  u_clk_wiz/inst/clk_out1 |                                 |                            |                7 |             12 |         1.71 |
-|  u_clk_wiz/inst/clk_out1 |                                 | pix_rst                    |               10 |             12 |         1.20 |
+|  u_clk_wiz/inst/clk_out1 |                                 | u_vga/hcount[9]_i_1_n_0    |                5 |             10 |         2.00 |
 |  u_clk_wiz/inst/clk_out1 |                                 | u_scaler/vga_r[3]_i_1_n_0  |                3 |             12 |         4.00 |
+|  u_clk_wiz/inst/clk_out1 |                                 | pix_rst                    |               10 |             12 |         1.20 |
+|  u_clk_wiz/inst/clk_out1 |                                 |                            |                7 |             12 |         1.71 |
 |  clk_100mhz_IBUF_BUFG    | u_cfg/sccb_start_i_1_n_0        | global_rst                 |                4 |             16 |         4.00 |
 | ~cam_pclk_IBUF_BUFG      | u_capture/wr_data[15]_i_1_n_0   |                            |                9 |             16 |         1.78 |
 | ~cam_pclk_IBUF_BUFG      | u_capture/wr_addr[16]_i_2_n_0   | u_capture/v_cnt[0]         |                4 |             17 |         4.25 |

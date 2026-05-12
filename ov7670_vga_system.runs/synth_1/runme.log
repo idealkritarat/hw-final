@@ -7,7 +7,7 @@
   **** SW Build 6299465 on Fri Nov 14 12:34:56 MST 2025
   **** IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
   **** SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
-  **** Start of session at: Tue May 12 12:45:49 2026
+  **** Start of session at: Tue May 12 13:09:05 2026
     ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
     ** Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 
@@ -24,15 +24,15 @@ INFO: [Designutils 20-5440] No compile time benefit to using incremental synthes
 INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 7 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 49084
+INFO: [Synth 8-7075] Helper process launched with PID 80875
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2745.539 ; gain = 482.578 ; free physical = 2111 ; free virtual = 4601
+Starting RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2745.688 ; gain = 480.211 ; free physical = 2094 ; free virtual = 4576
 ---------------------------------------------------------------------------------
-CRITICAL WARNING: [Synth 8-9873] overwriting previous definition of module 'filter_engine' [/home/user/ov7670_vga_system/hdl_sources/filter_engine.v:77]
+CRITICAL WARNING: [Synth 8-9873] overwriting previous definition of module 'filter_engine' [/home/user/ov7670_vga_system/hdl_sources/filter_engine.v:63]
 INFO: [Synth 8-13127] previous definition of module 'filter_engine' is here [/home/user/hw-lab-final-project-2/src/filter_engine.v:77]
 INFO: [Synth 8-6157] synthesizing module 'top' [/home/user/ov7670_vga_system/hdl_sources/top.v:29]
-INFO: [Synth 8-6157] synthesizing module 'clk_wiz_0' [/home/user/ov7670_vga_system/ov7670_vga_system.runs/synth_1/.Xil/Vivado-49046-docker-desktop/realtime/clk_wiz_0_stub.v:6]
-INFO: [Synth 8-6155] done synthesizing module 'clk_wiz_0' (0#1) [/home/user/ov7670_vga_system/ov7670_vga_system.runs/synth_1/.Xil/Vivado-49046-docker-desktop/realtime/clk_wiz_0_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'clk_wiz_0' [/home/user/ov7670_vga_system/ov7670_vga_system.runs/synth_1/.Xil/Vivado-80834-docker-desktop/realtime/clk_wiz_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'clk_wiz_0' (0#1) [/home/user/ov7670_vga_system/ov7670_vga_system.runs/synth_1/.Xil/Vivado-80834-docker-desktop/realtime/clk_wiz_0_stub.v:6]
 INFO: [Synth 8-6157] synthesizing module 'ODDR' [/home/user/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:117225]
 	Parameter DDR_CLK_EDGE bound to: OPPOSITE_EDGE - type: string 
 	Parameter INIT bound to: 1'b0 
@@ -42,22 +42,22 @@ INFO: [Synth 8-6157] synthesizing module 'sccb_master' [/home/user/ov7670_vga_sy
 	Parameter CLK_FREQ bound to: 100000000 - type: integer 
 	Parameter SCCB_FREQ bound to: 100000 - type: integer 
 INFO: [Synth 8-6155] done synthesizing module 'sccb_master' (0#1) [/home/user/ov7670_vga_system/hdl_sources/sccb_master.v:37]
-INFO: [Synth 8-6157] synthesizing module 'ov7670_config' [/home/user/ov7670_vga_system/hdl_sources/ov7670_config.v:15]
-INFO: [Synth 8-226] default block is never used [/home/user/ov7670_vga_system/hdl_sources/ov7670_config.v:157]
-INFO: [Synth 8-6155] done synthesizing module 'ov7670_config' (0#1) [/home/user/ov7670_vga_system/hdl_sources/ov7670_config.v:15]
+INFO: [Synth 8-6157] synthesizing module 'ov7670_config' [/home/user/ov7670_vga_system/hdl_sources/ov7670_config.v:7]
+INFO: [Synth 8-226] default block is never used [/home/user/ov7670_vga_system/hdl_sources/ov7670_config.v:148]
+INFO: [Synth 8-6155] done synthesizing module 'ov7670_config' (0#1) [/home/user/ov7670_vga_system/hdl_sources/ov7670_config.v:7]
 INFO: [Synth 8-6157] synthesizing module 'ov7670_capture' [/home/user/ov7670_vga_system/hdl_sources/ov7670_capture.v:6]
 INFO: [Synth 8-6155] done synthesizing module 'ov7670_capture' (0#1) [/home/user/ov7670_vga_system/hdl_sources/ov7670_capture.v:6]
 INFO: [Synth 8-6157] synthesizing module 'frame_buffer' [/home/user/ov7670_vga_system/hdl_sources/frame_buffer.v:23]
-INFO: [Synth 8-6157] synthesizing module 'blk_mem_gen_0' [/home/user/ov7670_vga_system/ov7670_vga_system.runs/synth_1/.Xil/Vivado-49046-docker-desktop/realtime/blk_mem_gen_0_stub.v:6]
-INFO: [Synth 8-6155] done synthesizing module 'blk_mem_gen_0' (0#1) [/home/user/ov7670_vga_system/ov7670_vga_system.runs/synth_1/.Xil/Vivado-49046-docker-desktop/realtime/blk_mem_gen_0_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'blk_mem_gen_0' [/home/user/ov7670_vga_system/ov7670_vga_system.runs/synth_1/.Xil/Vivado-80834-docker-desktop/realtime/blk_mem_gen_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'blk_mem_gen_0' (0#1) [/home/user/ov7670_vga_system/ov7670_vga_system.runs/synth_1/.Xil/Vivado-80834-docker-desktop/realtime/blk_mem_gen_0_stub.v:6]
 INFO: [Synth 8-6155] done synthesizing module 'frame_buffer' (0#1) [/home/user/ov7670_vga_system/hdl_sources/frame_buffer.v:23]
 INFO: [Synth 8-6157] synthesizing module 'vga_controller' [/home/user/ov7670_vga_system/hdl_sources/vga_controller.v:31]
 INFO: [Synth 8-6155] done synthesizing module 'vga_controller' (0#1) [/home/user/ov7670_vga_system/hdl_sources/vga_controller.v:31]
-INFO: [Synth 8-6157] synthesizing module 'display_scaler' [/home/user/ov7670_vga_system/hdl_sources/display_scaler.v:45]
-INFO: [Synth 8-6157] synthesizing module 'filter_engine' [/home/user/ov7670_vga_system/hdl_sources/filter_engine.v:20]
-INFO: [Synth 8-226] default block is never used [/home/user/ov7670_vga_system/hdl_sources/filter_engine.v:60]
-INFO: [Synth 8-6155] done synthesizing module 'filter_engine' (0#1) [/home/user/ov7670_vga_system/hdl_sources/filter_engine.v:20]
-INFO: [Synth 8-6155] done synthesizing module 'display_scaler' (0#1) [/home/user/ov7670_vga_system/hdl_sources/display_scaler.v:45]
+INFO: [Synth 8-6157] synthesizing module 'display_scaler' [/home/user/ov7670_vga_system/hdl_sources/display_scaler.v:23]
+INFO: [Synth 8-6157] synthesizing module 'filter_engine' [/home/user/ov7670_vga_system/hdl_sources/filter_engine.v:6]
+INFO: [Synth 8-226] default block is never used [/home/user/ov7670_vga_system/hdl_sources/filter_engine.v:46]
+INFO: [Synth 8-6155] done synthesizing module 'filter_engine' (0#1) [/home/user/ov7670_vga_system/hdl_sources/filter_engine.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'display_scaler' (0#1) [/home/user/ov7670_vga_system/hdl_sources/display_scaler.v:23]
 INFO: [Synth 8-6155] done synthesizing module 'top' (0#1) [/home/user/ov7670_vga_system/hdl_sources/top.v:29]
 WARNING: [Synth 8-3917] design top has port cam_pwdn driven by constant 0
 WARNING: [Synth 8-3917] design top has port cam_rst_n driven by constant 1
@@ -65,18 +65,18 @@ WARNING: [Synth 8-3917] design top has port led[2] driven by constant 0
 WARNING: [Synth 8-3917] design top has port led[1] driven by constant 0
 WARNING: [Synth 8-3917] design top has port led[0] driven by constant 0
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2841.922 ; gain = 578.961 ; free physical = 1946 ; free virtual = 4470
+Finished RTL Elaboration : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2842.051 ; gain = 576.574 ; free physical = 2022 ; free virtual = 4547
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2851.059 ; gain = 588.098 ; free physical = 1938 ; free virtual = 4462
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2848.215 ; gain = 582.738 ; free physical = 2019 ; free virtual = 4544
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2851.059 ; gain = 588.098 ; free physical = 1938 ; free virtual = 4462
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2848.215 ; gain = 582.738 ; free physical = 2019 ; free virtual = 4544
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2854.922 ; gain = 0.070 ; free physical = 1935 ; free virtual = 4460
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2852.074 ; gain = 0.070 ; free physical = 2009 ; free virtual = 4535
 INFO: [Netlist 29-17] Analyzing 1 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
@@ -108,28 +108,28 @@ INFO: [Project 1-236] Implementation specific constraints were found while readi
 Resolution: To avoid this warning, move constraints listed in [.Xil/top_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2972.281 ; gain = 0.000 ; free physical = 1876 ; free virtual = 4407
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2967.438 ; gain = 0.000 ; free physical = 1959 ; free virtual = 4491
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2974.586 ; gain = 0.000 ; free physical = 1869 ; free virtual = 4400
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2969.742 ; gain = 0.000 ; free physical = 1957 ; free virtual = 4489
 INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
 INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 2975.125 ; gain = 712.164 ; free physical = 1868 ; free virtual = 4400
+Finished Constraint Validation : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 2970.242 ; gain = 704.766 ; free physical = 2003 ; free virtual = 4536
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xc7a35tcpg236-1
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 2983.246 ; gain = 720.285 ; free physical = 1868 ; free virtual = 4400
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 2970.242 ; gain = 704.766 ; free physical = 2003 ; free virtual = 4536
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 2983.301 ; gain = 720.340 ; free physical = 1924 ; free virtual = 4456
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 2970.242 ; gain = 704.766 ; free physical = 2003 ; free virtual = 4536
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'ov7670_config'
 ---------------------------------------------------------------------------------------------------
@@ -142,7 +142,7 @@ INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'ov767
 ---------------------------------------------------------------------------------------------------
 INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 'sequential' in module 'ov7670_config'
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 2983.301 ; gain = 720.340 ; free physical = 1926 ; free virtual = 4459
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 2970.242 ; gain = 704.766 ; free physical = 2003 ; free virtual = 4536
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
@@ -210,7 +210,7 @@ WARNING: [Synth 8-3917] design top has port led[2] driven by constant 0
 WARNING: [Synth 8-3917] design top has port led[1] driven by constant 0
 WARNING: [Synth 8-3917] design top has port led[0] driven by constant 0
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 2983.301 ; gain = 720.340 ; free physical = 1907 ; free virtual = 4441
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2970.242 ; gain = 704.766 ; free physical = 1982 ; free virtual = 4516
 ---------------------------------------------------------------------------------
  Sort Area is  u_scaler/scaled_y_full_0 : 0 0 : 227 227 : Used 1 time 0
 ---------------------------------------------------------------------------------
@@ -240,20 +240,20 @@ Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 3033.477 ; gain = 770.516 ; free physical = 1817 ; free virtual = 4352
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 3034.438 ; gain = 768.961 ; free physical = 1859 ; free virtual = 4394
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 3065.859 ; gain = 802.898 ; free physical = 1778 ; free virtual = 4313
+Finished Timing Optimization : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 3065.820 ; gain = 800.344 ; free physical = 1830 ; free virtual = 4365
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-7052] The timing for the instance u_cfg/rom_idx_reg_rep (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 3066.129 ; gain = 803.168 ; free physical = 1776 ; free virtual = 4311
+Finished Technology Mapping : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 3066.094 ; gain = 800.617 ; free physical = 1830 ; free virtual = 4365
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -271,37 +271,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:00:25 ; elapsed = 00:00:26 . Memory (MB): peak = 3233.105 ; gain = 970.145 ; free physical = 1626 ; free virtual = 4160
+Finished IO Insertion : Time (s): cpu = 00:00:24 ; elapsed = 00:00:26 . Memory (MB): peak = 3234.066 ; gain = 968.590 ; free physical = 1675 ; free virtual = 4210
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:00:25 ; elapsed = 00:00:26 . Memory (MB): peak = 3233.117 ; gain = 970.156 ; free physical = 1626 ; free virtual = 4160
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:24 ; elapsed = 00:00:26 . Memory (MB): peak = 3234.082 ; gain = 968.605 ; free physical = 1675 ; free virtual = 4210
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:25 ; elapsed = 00:00:26 . Memory (MB): peak = 3233.176 ; gain = 970.215 ; free physical = 1626 ; free virtual = 4160
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:24 ; elapsed = 00:00:26 . Memory (MB): peak = 3234.141 ; gain = 968.664 ; free physical = 1675 ; free virtual = 4210
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:00:25 ; elapsed = 00:00:26 . Memory (MB): peak = 3233.191 ; gain = 970.230 ; free physical = 1626 ; free virtual = 4160
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:24 ; elapsed = 00:00:26 . Memory (MB): peak = 3234.152 ; gain = 968.676 ; free physical = 1675 ; free virtual = 4210
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:25 ; elapsed = 00:00:26 . Memory (MB): peak = 3236.188 ; gain = 973.227 ; free physical = 1622 ; free virtual = 4156
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:24 ; elapsed = 00:00:26 . Memory (MB): peak = 3237.152 ; gain = 971.676 ; free physical = 1663 ; free virtual = 4198
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:00:25 ; elapsed = 00:00:26 . Memory (MB): peak = 3236.191 ; gain = 973.230 ; free physical = 1622 ; free virtual = 4156
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:24 ; elapsed = 00:00:26 . Memory (MB): peak = 3237.152 ; gain = 971.676 ; free physical = 1663 ; free virtual = 4198
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -348,19 +348,19 @@ Report Cell Usage:
 |19    |OBUFT       |     1|
 +------+------------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:00:25 ; elapsed = 00:00:26 . Memory (MB): peak = 3236.246 ; gain = 973.285 ; free physical = 1622 ; free virtual = 4156
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:24 ; elapsed = 00:00:26 . Memory (MB): peak = 3237.207 ; gain = 971.730 ; free physical = 1663 ; free virtual = 4198
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 5 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:00:22 ; elapsed = 00:00:24 . Memory (MB): peak = 3236.285 ; gain = 849.797 ; free physical = 1622 ; free virtual = 4156
-Synthesis Optimization Complete : Time (s): cpu = 00:00:25 ; elapsed = 00:00:27 . Memory (MB): peak = 3236.297 ; gain = 973.328 ; free physical = 1622 ; free virtual = 4156
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 3237.250 ; gain = 850.242 ; free physical = 1663 ; free virtual = 4198
+Synthesis Optimization Complete : Time (s): cpu = 00:00:24 ; elapsed = 00:00:26 . Memory (MB): peak = 3237.262 ; gain = 971.773 ; free physical = 1663 ; free virtual = 4198
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3236.355 ; gain = 0.004 ; free physical = 1622 ; free virtual = 4158
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3237.316 ; gain = 0.000 ; free physical = 1659 ; free virtual = 4197
 INFO: [Netlist 29-17] Analyzing 49 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-140] Inserted 1 IBUFs to IO ports without IO buffers.
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3295.125 ; gain = 0.000 ; free physical = 1921 ; free virtual = 4462
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3295.906 ; gain = 0.000 ; free physical = 1959 ; free virtual = 4501
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
@@ -368,11 +368,11 @@ Synth Design complete | Checksum: 296f8bae
 INFO: [Common 17-83] Releasing license: Synthesis
 53 Infos, 16 Warnings, 4 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:00:35 ; elapsed = 00:00:34 . Memory (MB): peak = 3295.125 ; gain = 1258.605 ; free physical = 1911 ; free virtual = 4452
-INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 2381.180; main = 2159.963; forked = 532.498
-INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 5115.254; main = 3276.758; forked = 2142.703
+synth_design: Time (s): cpu = 00:00:34 ; elapsed = 00:00:33 . Memory (MB): peak = 3295.906 ; gain = 1255.887 ; free physical = 1954 ; free virtual = 4496
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 2375.387; main = 2161.569; forked = 532.512
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 5110.430; main = 3276.867; forked = 2142.723
 INFO: [runtcl-6] Synthesis results are not added to the cache due to CRITICAL_WARNING
-Write ShapeDB Complete: Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.04 . Memory (MB): peak = 3302.270 ; gain = 0.402 ; free physical = 1914 ; free virtual = 4456
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.04 . Memory (MB): peak = 3302.402 ; gain = 0.402 ; free physical = 1954 ; free virtual = 4495
 INFO: [Common 17-1381] The checkpoint '/home/user/ov7670_vga_system/ov7670_vga_system.runs/synth_1/top.dcp' has been generated.
 INFO: [Vivado 12-24828] Executing command : report_utilization -file top_utilization_synth.rpt -pb top_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Tue May 12 12:46:30 2026...
+INFO: [Common 17-206] Exiting Vivado at Tue May 12 13:09:46 2026...
