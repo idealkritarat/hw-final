@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2025.2 (lin64) Build 6299465 Fri Nov 14 12:34:56 MST 2025
-| Date         : Tue May 12 11:44:48 2026
+| Date         : Tue May 12 12:47:09 2026
 | Host         : docker-desktop running 64-bit Ubuntu"
 VERSION_ID="22.04 22.04.5 LTS (Jammy Jellyfish)"
 VERSION_CODENAME=jammy
@@ -25,11 +25,11 @@ Table of Contents
 +----------------------------------------------------------+-------+
 |                          Status                          | Count |
 +----------------------------------------------------------+-------+
-| Total control sets                                       |    23 |
-|    Minimum number of control sets                        |    23 |
+| Total control sets                                       |    24 |
+|    Minimum number of control sets                        |    24 |
 |    Addition due to synthesis replication                 |     0 |
 |    Addition due to physical synthesis replication        |     0 |
-| Unused register locations in slices containing registers |    79 |
+| Unused register locations in slices containing registers |    88 |
 +----------------------------------------------------------+-------+
 * Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
 ** Run report_qor_suggestions for automated merging and remapping suggestions
@@ -41,15 +41,15 @@ Table of Contents
 +--------------------+-------+
 |       Fanout       | Count |
 +--------------------+-------+
-| Total control sets |    23 |
-| >= 0 to < 4        |     4 |
-| >= 4 to < 6        |     3 |
+| Total control sets |    24 |
+| >= 0 to < 4        |     5 |
+| >= 4 to < 6        |     2 |
 | >= 6 to < 8        |     1 |
 | >= 8 to < 10       |     4 |
-| >= 10 to < 12      |     3 |
-| >= 12 to < 14      |     1 |
+| >= 10 to < 12      |     4 |
+| >= 12 to < 14      |     3 |
 | >= 14 to < 16      |     0 |
-| >= 16              |     7 |
+| >= 16              |     5 |
 +--------------------+-------+
 * Control sets can be remapped at either synth_design or opt_design
 
@@ -60,44 +60,45 @@ Table of Contents
 +--------------+-----------------------+------------------------+-----------------+--------------+
 | Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
 +--------------+-----------------------+------------------------+-----------------+--------------+
-| No           | No                    | No                     |              24 |           16 |
+| No           | No                    | No                     |              19 |           13 |
 | No           | No                    | Yes                    |               0 |            0 |
-| No           | Yes                   | No                     |              68 |           27 |
-| Yes          | No                    | No                     |              24 |           11 |
+| No           | Yes                   | No                     |              52 |           29 |
+| Yes          | No                    | No                     |              24 |           13 |
 | Yes          | No                    | Yes                    |               0 |            0 |
-| Yes          | Yes                   | No                     |             109 |           33 |
+| Yes          | Yes                   | No                     |             129 |           39 |
 +--------------+-----------------------+------------------------+-----------------+--------------+
 
 
 4. Detailed Control Set Information
 -----------------------------------
 
-+--------------------------+---------------------------------+---------------------------+------------------+----------------+--------------+
-|       Clock Signal       |          Enable Signal          |      Set/Reset Signal     | Slice Load Count | Bel Load Count | Bels / Slice |
-+--------------------------+---------------------------------+---------------------------+------------------+----------------+--------------+
-|  clk_100mhz_IBUF_BUFG    |                                 |                           |                1 |              1 |         1.00 |
-|  clk_100mhz_IBUF_BUFG    | u_sccb/scl                      | global_rst                |                1 |              1 |         1.00 |
-| ~cam_pclk_IBUF_BUFG      |                                 | cam_rst                   |                2 |              2 |         1.00 |
-|  cam_pclk_IBUF_BUFG      |                                 |                           |                2 |              3 |         1.50 |
-|  clk_100mhz_IBUF_BUFG    | u_sccb/state[0]                 | global_rst                |                2 |              4 |         2.00 |
-|  clk_100mhz_IBUF_BUFG    | u_sccb/bit_cnt[0]               | global_rst                |                2 |              4 |         2.00 |
-| ~cam_pclk_IBUF_BUFG      |                                 |                           |                3 |              5 |         1.67 |
-|  clk_100mhz_IBUF_BUFG    | u_cfg/rom_idx[0]                | global_rst                |                3 |              7 |         2.33 |
-| ~cam_pclk_IBUF_BUFG      | u_capture/first_byte[7]_i_1_n_0 |                           |                4 |              8 |         2.00 |
-|  clk_100mhz_IBUF_BUFG    |                                 | global_rst                |                5 |              8 |         1.60 |
-|  clk_100mhz_IBUF_BUFG    |                                 | u_sccb/clk_cnt[7]_i_1_n_0 |                2 |              8 |         4.00 |
-|  clk_100mhz_IBUF_BUFG    | u_sccb/tx_byte_0[0]             | global_rst                |                3 |              8 |         2.67 |
-|  u_clk_wiz/inst/clk_out1 |                                 | u_vga/hcount[9]_i_1_n_0   |                4 |             10 |         2.50 |
-|  u_clk_wiz/inst/clk_out1 | u_vga/E[0]                      | pix_rst                   |                3 |             10 |         3.33 |
-|  u_clk_wiz/inst/clk_out1 |                                 | pix_rst                   |                6 |             11 |         1.83 |
-|  u_clk_wiz/inst/clk_out1 |                                 | u_scaler/vga_r[3]_i_1_n_0 |                2 |             12 |         6.00 |
-|  clk_100mhz_IBUF_BUFG    | u_cfg/sccb_start_i_1_n_0        | global_rst                |                3 |             16 |         5.33 |
-| ~cam_pclk_IBUF_BUFG      | u_capture/wr_data[15]_i_1_n_0   |                           |                7 |             16 |         2.29 |
-|  u_clk_wiz/inst/clk_out1 |                                 | u_vga/SR[0]               |                6 |             17 |         2.83 |
-|  u_clk_wiz/inst/clk_out1 |                                 |                           |               10 |             17 |         1.70 |
-| ~cam_pclk_IBUF_BUFG      | u_capture/wr_addr[16]_i_1_n_0   | cam_rst                   |                5 |             17 |         3.40 |
-|  clk_100mhz_IBUF_BUFG    | u_cfg/wait_cnt[17]_i_1_n_0      | global_rst                |                5 |             18 |         3.60 |
-|  clk_100mhz_IBUF_BUFG    | sel                             | rst_cnt[0]_i_1_n_0        |                6 |             24 |         4.00 |
-+--------------------------+---------------------------------+---------------------------+------------------+----------------+--------------+
++--------------------------+---------------------------------+----------------------------+------------------+----------------+--------------+
+|       Clock Signal       |          Enable Signal          |      Set/Reset Signal      | Slice Load Count | Bel Load Count | Bels / Slice |
++--------------------------+---------------------------------+----------------------------+------------------+----------------+--------------+
+|  clk_100mhz_IBUF_BUFG    |                                 |                            |                1 |              1 |         1.00 |
+|  clk_100mhz_IBUF_BUFG    | u_sccb/scl                      | global_rst                 |                1 |              1 |         1.00 |
+| ~cam_pclk_IBUF_BUFG      |                                 | cam_rst                    |                2 |              2 |         1.00 |
+| ~cam_pclk_IBUF_BUFG      |                                 |                            |                3 |              3 |         1.00 |
+|  cam_pclk_IBUF_BUFG      |                                 |                            |                2 |              3 |         1.50 |
+|  clk_100mhz_IBUF_BUFG    | u_sccb/state[0]                 | global_rst                 |                1 |              4 |         4.00 |
+|  clk_100mhz_IBUF_BUFG    | u_sccb/bit_cnt[0]               | global_rst                 |                1 |              4 |         4.00 |
+|  clk_100mhz_IBUF_BUFG    | u_cfg/rom_idx[0]                | global_rst                 |                3 |              7 |         2.33 |
+|  clk_100mhz_IBUF_BUFG    |                                 | u_sccb/clk_cnt[7]_i_1_n_0  |                3 |              8 |         2.67 |
+| ~cam_pclk_IBUF_BUFG      | u_capture/first_byte[7]_i_1_n_0 |                            |                4 |              8 |         2.00 |
+|  clk_100mhz_IBUF_BUFG    | u_sccb/tx_byte_0[0]             | global_rst                 |                3 |              8 |         2.67 |
+|  clk_100mhz_IBUF_BUFG    |                                 | global_rst                 |                6 |              8 |         1.33 |
+| ~cam_pclk_IBUF_BUFG      | u_capture/v_cnt0                | u_capture/v_cnt[0]         |                4 |             10 |         2.50 |
+| ~cam_pclk_IBUF_BUFG      | u_capture/byte_cnt              | u_capture/h_cnt[9]_i_1_n_0 |                3 |             10 |         3.33 |
+|  u_clk_wiz/inst/clk_out1 |                                 | u_vga/hcount[9]_i_1_n_0    |                5 |             10 |         2.00 |
+|  u_clk_wiz/inst/clk_out1 | u_vga/E[0]                      | pix_rst                    |                4 |             10 |         2.50 |
+|  u_clk_wiz/inst/clk_out1 |                                 |                            |                7 |             12 |         1.71 |
+|  u_clk_wiz/inst/clk_out1 |                                 | pix_rst                    |               10 |             12 |         1.20 |
+|  u_clk_wiz/inst/clk_out1 |                                 | u_scaler/vga_r[3]_i_1_n_0  |                3 |             12 |         4.00 |
+|  clk_100mhz_IBUF_BUFG    | u_cfg/sccb_start_i_1_n_0        | global_rst                 |                4 |             16 |         4.00 |
+| ~cam_pclk_IBUF_BUFG      | u_capture/wr_data[15]_i_1_n_0   |                            |                9 |             16 |         1.78 |
+| ~cam_pclk_IBUF_BUFG      | u_capture/wr_addr[16]_i_2_n_0   | u_capture/v_cnt[0]         |                4 |             17 |         4.25 |
+|  clk_100mhz_IBUF_BUFG    | u_cfg/wait_cnt[17]_i_1_n_0      | global_rst                 |                5 |             18 |         3.60 |
+|  clk_100mhz_IBUF_BUFG    | sel                             | rst_cnt[0]_i_1_n_0         |                6 |             24 |         4.00 |
++--------------------------+---------------------------------+----------------------------+------------------+----------------+--------------+
 
 
