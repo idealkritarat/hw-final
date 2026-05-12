@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2025.2 (lin64) Build 6299465 Fri Nov 14 12:34:56 MST 2025
-| Date         : Thu May  7 21:14:44 2026
+| Date         : Tue May 12 11:44:48 2026
 | Host         : docker-desktop running 64-bit Ubuntu"
 VERSION_ID="22.04 22.04.5 LTS (Jammy Jellyfish)"
 VERSION_CODENAME=jammy
@@ -94,8 +94,8 @@ Table of Contents
 |  clk_100mhz_IBUF_BUFG    | u_cfg/sccb_start_i_1_n_0        | global_rst                |                3 |             16 |         5.33 |
 | ~cam_pclk_IBUF_BUFG      | u_capture/wr_data[15]_i_1_n_0   |                           |                7 |             16 |         2.29 |
 |  u_clk_wiz/inst/clk_out1 |                                 | u_vga/SR[0]               |                6 |             17 |         2.83 |
-| ~cam_pclk_IBUF_BUFG      | u_capture/wr_addr[16]_i_1_n_0   | cam_rst                   |                5 |             17 |         3.40 |
 |  u_clk_wiz/inst/clk_out1 |                                 |                           |               10 |             17 |         1.70 |
+| ~cam_pclk_IBUF_BUFG      | u_capture/wr_addr[16]_i_1_n_0   | cam_rst                   |                5 |             17 |         3.40 |
 |  clk_100mhz_IBUF_BUFG    | u_cfg/wait_cnt[17]_i_1_n_0      | global_rst                |                5 |             18 |         3.60 |
 |  clk_100mhz_IBUF_BUFG    | sel                             | rst_cnt[0]_i_1_n_0        |                6 |             24 |         4.00 |
 +--------------------------+---------------------------------+---------------------------+------------------+----------------+--------------+
