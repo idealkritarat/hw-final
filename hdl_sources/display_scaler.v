@@ -56,7 +56,7 @@ module display_scaler (
 
     // BRAM Port B (read)
     input  wire [15:0] rd_data,    // {R[4:0], G[5:0], B[4:0]}
-    output reg  [16:0] rd_addr,    // read address into frame buffer
+    output wire [16:0] rd_addr,    // read address into frame buffer (combinational)
 
     // Filter select
     input  wire [1:0]  sw,
@@ -94,19 +94,20 @@ module display_scaler (
     // addr = img_y * 320 + img_x = (img_y << 8) + (img_y << 6) + img_x
     wire [16:0] addr_next = ({9'd0, img_y} << 8) + ({9'd0, img_y} << 6) + {8'd0, img_x};
 
+    // Combinational address to BRAM (addr register is inside the BRAM IP)
+    assign rd_addr = (active && valid_area) ? addr_next : 17'd0;
+
     // -----------------------------------------------------------------------
-    // Pipeline stage 1: register address and active (cycle 0 → cycle 1)
+    // Pipeline stage 1: register active (cycle 0 → cycle 1)
     // -----------------------------------------------------------------------
     reg active_d1;  // active delayed 1 cycle
     reg active_d2;  // active delayed 2 cycles — aligns with rd_data valid
 
     always @(posedge clk) begin
         if (rst) begin
-            rd_addr   <= 17'd0;
             active_d1 <= 1'b0;
             active_d2 <= 1'b0;
         end else begin
-            rd_addr   <= (active && valid_area) ? addr_next : 17'd0;
             active_d1 <= (active && valid_area);
             active_d2 <= active_d1;
         end

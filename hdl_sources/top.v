@@ -301,8 +301,8 @@ module top (
             vsync_delay <= {vsync_delay[2:0], vsync_raw};
         end
     end
-    assign vga_hsync = hsync_delay[3];
-    assign vga_vsync = vsync_delay[3];
+    assign vga_hsync = hsync_delay[2];
+    assign vga_vsync = vsync_delay[2];
 
     // -----------------------------------------------------------------------
     // Diagnostic LEDs - DISABLED
