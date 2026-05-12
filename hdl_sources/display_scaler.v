@@ -15,31 +15,9 @@
 //
 // Clock Domain: pixel_clk (25 MHz) — same as VGA controller
 //
-// Ports:
-//   clk         — 25 MHz pixel clock
-//   rst         — synchronous active-high reset
-//   hcount      — from vga_controller [9:0]
-//   vcount      — from vga_controller [9:0]
-//   active      — from vga_controller
-//   frame_valid — from top.v CDC: high once camera has completed >= 1 full frame
-//   rd_data     — 12-bit pixel {R,G,B} from BRAM Port B
-//   rd_addr     — read address to BRAM Port B [16:0]
-//   sw          — 2-bit switch for filter selection
-//   vga_r       — 4-bit VGA red   output
-//   vga_g       — 4-bit VGA green output
-//   vga_b       — 4-bit VGA blue  output
-//
-// Pipeline (2 stages, BRAM output register DISABLED in IP wizard):
-//   Stage 1 (posedge): rd_addr latched, active_d1 latched
-//   BRAM read: 1 cycle (addr is registered inside BRAM primitive)
-//   Stage 2 (posedge): vga_r/g/b latched, gated by active_d2
-//   => active must be delayed by 2 cycles to align with rd_data.
-//
-// Pitfalls:
-//   - Using active_d1 with the BRAM output register ENABLED causes
-//     a 1-cycle misalignment (left-edge garbage pixel). Use active_d2.
-//   - The multiply (buf_row * 320) is (row<<8)+(row<<6) — no DSP48.
-//   - When not active or frame not valid, drive RGB outputs to 0.
+// Pipeline:
+//   - rd_addr: Combinational (Address register is inside BRAM primitive)
+//   - active_d2: Logic enable delayed by 2 cycles to align with BRAM output
 // =============================================================================
 
 module display_scaler (

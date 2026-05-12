@@ -1,13 +1,5 @@
-// =============================================================================
-// Module      : ov7670_config
 // Purpose     : Sequences all required SCCB write transactions to configure
-//               the OV7670 camera for RGB565 output at QVGA (320x240).
-//
-// Switch-Controlled Color Debugging:
-//   sw[10:9]  — COM14 mode (4 options)
-//   sw[12:11] — COM9 gain ceiling (4 options)
-//   sw[14:13] — Color matrix preset (4 options)
-//   Set switches BEFORE pressing reset (BTNC).
+//               the OV7670 camera for RGB565 output at VGA (640x480).
 //
 // Clock Domain: clk (100 MHz system clock)
 // =============================================================================
@@ -28,7 +20,7 @@ module ov7670_config (
     // -----------------------------------------------------------------------
     // Register ROM — {addr, data} pairs
     // -----------------------------------------------------------------------
-    localparam N_REGS = 70;
+    localparam N_REGS = 69; // Optimized register list
     reg [15:0] current_reg;
     reg [6:0]  rom_idx;
 
@@ -118,11 +110,10 @@ module ov7670_config (
             
             // 10. Frame Stability & Color
             7'd64: current_reg = {8'h15, 8'h00}; // COM10
-            7'd65: current_reg = {8'h13, 8'hef}; // COM8 repeat
-            7'd66: current_reg = {8'h0e, 8'h61}; // COM6
-            7'd67: current_reg = {8'h16, 8'h00}; // Reserved
-            7'd68: current_reg = {8'h1e, 8'h07}; // MVFP
-            7'd69: current_reg = {8'h3d, 8'hc0}; // COM13: Gamma Enable (Boosts color contrast)
+            7'd65: current_reg = {8'h0e, 8'h61}; // COM6
+            7'd66: current_reg = {8'h16, 8'h00}; // Reserved
+            7'd67: current_reg = {8'h1e, 8'h07}; // MVFP
+            7'd68: current_reg = {8'h3d, 8'hc0}; // COM13: Gamma Enable
             
             default: current_reg = {8'hFF, 8'hFF};
         endcase

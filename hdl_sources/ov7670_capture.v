@@ -19,8 +19,6 @@ module ov7670_capture #(
     output reg         frame_done
 );
 
-    localparam FRAME_PIXELS = FRAME_WIDTH * FRAME_HEIGHT;
-
     reg [7:0]  first_byte;
     reg        byte_cnt;
     reg        vsync_prev;

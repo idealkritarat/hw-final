@@ -1,20 +1,6 @@
-`default_nettype none
-
 // =============================================================================
 // Module      : filter_engine
-// Purpose     : Combinational logic to apply various image filters to a
-//               16-bit RGB565 pixel based on switch inputs.
-//
-// Filters:
-//   sw = 00 -> Pass-through (Raw)
-//   sw = 01 -> Grayscale (Rec.601 luminance)
-//   sw = 10 -> Color Isolation (Red channel only)
-//   sw = 11 -> Color Inversion (Negative)
-//
-// Ports:
-//   pixel_in  [15:0] — 16-bit RGB565 input pixel
-//   sw        [1:0]  — 2-bit filter selection
-//   pixel_out [15:0] — 16-bit RGB565 filtered output pixel
+// Purpose     : Image filters for RGB565 pixels (Grayscale, Red-Only, Inversion).
 // =============================================================================
 
 module filter_engine (

@@ -256,35 +256,9 @@ module top (
         .vga_b       (scaler_b)
     );
 
-    // -----------------------------------------------------------------------
-    // TEST PATTERN Mux
-    // To enable, define TEST_PATTERN in Vivado (Settings -> Verilog Macros)
-    // -----------------------------------------------------------------------
-    `ifdef TEST_PATTERN
-        // Divide 640 horizontal pixels into 8 bars of 80 pixels each
-        // hcount[9:7] selects the 8 regions (640 / 80 = 8)
-        reg [11:0] test_rgb;
-        always @(*) begin
-            case (hcount[9:7])
-                3'd0: test_rgb = 12'hFFF; // White
-                3'd1: test_rgb = 12'hFF0; // Yellow
-                3'd2: test_rgb = 12'h0FF; // Cyan
-                3'd3: test_rgb = 12'h0F0; // Green
-                3'd4: test_rgb = 12'hF0F; // Magenta
-                3'd5: test_rgb = 12'hF00; // Red
-                3'd6: test_rgb = 12'h00F; // Blue
-                3'd7: test_rgb = 12'h000; // Black
-                default: test_rgb = 12'h000;
-            endcase
-        end
-        assign vga_r = active ? test_rgb[11:8] : 4'd0;
-        assign vga_g = active ? test_rgb[7:4]  : 4'd0;
-        assign vga_b = active ? test_rgb[3:0]  : 4'd0;
-    `else
-        assign vga_r = scaler_r;
-        assign vga_g = scaler_g;
-        assign vga_b = scaler_b;
-    `endif
+    assign vga_r = scaler_r;
+    assign vga_g = scaler_g;
+    assign vga_b = scaler_b;
 
     // -----------------------------------------------------------------------
     // VGA Sync Delay Compensation (4 cycles)
@@ -305,16 +279,9 @@ module top (
     assign vga_vsync = vsync_delay[2];
 
     // -----------------------------------------------------------------------
-    // Diagnostic LEDs - DISABLED
+    // Diagnostic LEDs (Not used)
     // -----------------------------------------------------------------------
-    wire sccb_ack_err;
-    assign led[0] = 1'b0;
-    assign led[1] = 1'b0;
-    assign led[2] = 1'b0;
-
-
-    // Connect ack_err to master
-    // (Need to update sccb_master instantiation below)
+    assign led = 3'b000;
 
 endmodule
 
