@@ -127,6 +127,7 @@ module top (
     wire        sccb_start, sccb_done, cfg_done;
     wire [7:0]  sccb_reg_addr, sccb_reg_data;
     wire        sda_out;
+    wire        sccb_ack_err;
 
     sccb_master #(
         .CLK_FREQ  (100_000_000),
