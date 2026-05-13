@@ -1,85 +1,57 @@
-// =============================================================================
-// Module      : display_scaler
-// Purpose     : Reads pixel data from the frame buffer (BRAM Port B) and
-//               drives the VGA RGB outputs using pixel doubling.
-//               Pixel doubling maps 320x240 frame buffer pixels to the
-//               640x480 VGA display region (Section 5 of project spec):
-//                 buf_col = hcount >> 1
-//                 buf_row = vcount >> 1
-//                 rd_addr = buf_row * 320 + buf_col
-//               Additionally implements three switchable image filters:
-//                 sw[1:0] = 00 → raw RGB
-//                 sw[1:0] = 01 → grayscale
-//                 sw[1:0] = 10 → color channel isolation (red only)
-//                 sw[1:0] = 11 → color inversion (negative)
+// Maps VGA coordinates to the 320x240 frame buffer, applies the selected
+// RGB565 filter, and drives the 4-bit VGA DAC signals.
 //
-// Clock Domain: pixel_clk (25 MHz) — same as VGA controller
-//
-// Pipeline:
-//   - rd_addr: Combinational (Address register is inside BRAM primitive)
-//   - active_d2: Logic enable delayed by 2 cycles to align with BRAM output
-// =============================================================================
+// The displayed camera image is a centered 360x480 region. That region is
+// scaled back to a 240x320 rotated coordinate space, then mapped into the
+// 320x240 buffer to correct the camera orientation used by this build.
 
 module display_scaler (
     input  wire        clk,
     input  wire        rst,
 
-    // From VGA controller
     input  wire [9:0]  hcount,
     input  wire [9:0]  vcount,
     input  wire        active,
 
-    // Frame ready flag (from top.v CDC — prevents displaying garbage frames)
     input  wire        frame_valid,
 
-    // BRAM Port B (read)
-    input  wire [15:0] rd_data,    // {R[4:0], G[5:0], B[4:0]}
-    output wire [16:0] rd_addr,    // read address into frame buffer (combinational)
+    input  wire [15:0] rd_data,
+    output wire [16:0] rd_addr,
 
-    // Filter select
     input  wire [1:0]  sw,
 
-    // VGA outputs
     output reg  [3:0]  vga_r,
     output reg  [3:0]  vga_g,
     output reg  [3:0]  vga_b
 );
 
-    // -----------------------------------------------------------------------
-    // Address calculation — Rotate 90 CW, Horizontal Mirror, 1.5x Scale, Center
-    // -----------------------------------------------------------------------
-    // Center a 360x480 image on a 640x480 screen (offset X by 140)
-    wire valid_area = (hcount >= 10'd140 && hcount < 10'd500 && vcount < 10'd480);
-    wire [8:0] screen_x = hcount - 10'd140; // 0 to 359
-    
-    // Scale down from 360x480 to 240x320 using factor 171/256 (~0.667)
-    wire [16:0] scaled_x_full = screen_x * 8'd171;
-    wire [17:0] scaled_y_full = vcount   * 8'd171;
-    
-    // Extract integer part (right shift by 8)
-    wire [7:0] rot_x = scaled_x_full[15:8]; // 0 to 239
-    wire [8:0] rot_y = scaled_y_full[16:8]; // 0 to 319
+    localparam SCREEN_X_OFFSET = 10'd140;
+    localparam SCREEN_X_END    = 10'd500;
+    localparam SCREEN_Y_END    = 10'd480;
+    localparam SCALE_NUM       = 8'd171;  // 171/256 is close to 2/3.
 
-    // Mathematical transformation for "Rotate 90 CW + Horizontal Mirror":
-    // Original image: 320(W) x 240(H)
-    // Rotated + Mirrored coordinates map perfectly to:
-    // img_x = rot_y
-    // img_y = rot_x
-    wire [8:0] img_x = rot_y; // 0 to 319
-    wire [7:0] img_y = rot_x; // 0 to 239
+    // Center a 360x480 image on a 640x480 display.
+    wire valid_area = (hcount >= SCREEN_X_OFFSET && hcount < SCREEN_X_END && vcount < SCREEN_Y_END);
+    wire [8:0] screen_x = hcount - SCREEN_X_OFFSET;
+    
+    wire [16:0] scaled_x_full = screen_x * SCALE_NUM;
+    wire [17:0] scaled_y_full = vcount   * SCALE_NUM;
+    
+    wire [7:0] rot_x = scaled_x_full[15:8];
+    wire [8:0] rot_y = scaled_y_full[16:8];
 
-    // Combinational address (drives BRAM; data available next cycle)
-    // addr = img_y * 320 + img_x = (img_y << 8) + (img_y << 6) + img_x
+    // Orientation correction: screen Y selects buffer X, screen X selects buffer Y.
+    wire [8:0] img_x = rot_y;
+    wire [7:0] img_y = rot_x;
+
+    // addr = img_y * 320 + img_x
     wire [16:0] addr_next = ({9'd0, img_y} << 8) + ({9'd0, img_y} << 6) + {8'd0, img_x};
 
-    // Combinational address to BRAM (addr register is inside the BRAM IP)
     assign rd_addr = (active && valid_area) ? addr_next : 17'd0;
 
-    // -----------------------------------------------------------------------
-    // Pipeline stage 1: register active (cycle 0 → cycle 1)
-    // -----------------------------------------------------------------------
-    reg active_d1;  // active delayed 1 cycle
-    reg active_d2;  // active delayed 2 cycles — aligns with rd_data valid
+    // Delay visibility to match the BRAM read and output register pipeline.
+    reg active_d1;
+    reg active_d2;
 
     always @(posedge clk) begin
         if (rst) begin
@@ -91,9 +63,6 @@ module display_scaler (
         end
     end
 
-    // -----------------------------------------------------------------------
-    // Image Filtering (combinational, stage 2)
-    // -----------------------------------------------------------------------
     wire [15:0] filtered_pixel;
     filter_engine u_filter (
         .pixel_in  (rd_data),
@@ -101,22 +70,17 @@ module display_scaler (
         .pixel_out (filtered_pixel)
     );
 
-    // -----------------------------------------------------------------------
-    // Pipeline stage 2: drive VGA outputs
-    // -----------------------------------------------------------------------
     always @(posedge clk) begin
         if (rst) begin
             vga_r <= 4'd0;
             vga_g <= 4'd0;
             vga_b <= 4'd0;
         end else begin
-            // Gate with active_d2 and frame_valid.
             if (!active_d2 || !frame_valid) begin
                 vga_r <= 4'd0;
                 vga_g <= 4'd0;
                 vga_b <= 4'd0;
             end else begin
-                // Map RGB565 to 4-bit VGA DACs (take MSBs)
                 vga_r <= filtered_pixel[15:12];
                 vga_g <= filtered_pixel[10:7];
                 vga_b <= filtered_pixel[4:1];
@@ -125,4 +89,3 @@ module display_scaler (
     end
 
 endmodule
-

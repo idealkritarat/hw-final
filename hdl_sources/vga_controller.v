@@ -1,67 +1,34 @@
-// =============================================================================
-// Module      : vga_controller
-// Purpose     : Generates standard 640x480 @ 60 Hz VGA timing signals.
-//               Produces horizontal/vertical counters used by the display
-//               scaler to address the frame buffer.
-//
-// Clock Domain: pixel_clk (25.175 MHz — use 25 MHz from Clocking Wizard)
-//
-// Ports:
-//   clk        — 25 MHz pixel clock (from Clocking Wizard)
-//   rst        — synchronous active-high reset
-//   hcount     — horizontal pixel counter [0..799]
-//   vcount     — vertical   line  counter [0..524]
-//   hsync      — horizontal sync (active-low pulse)
-//   vsync      — vertical   sync (active-low pulse)
-//   active     — high only in the 640x480 visible region
-//
-// VGA 640x480 @ 60 Hz timing (pixel clock = 25.175 MHz ≈ 25 MHz):
-//   Horizontal: 640 active + 16 FP + 96 sync + 48 BP = 800 total
-//   Vertical  : 480 active +  10 FP +  2 sync + 33 BP = 525 total
-//   hsync pulse: cols 656..751 (active-low)
-//   vsync pulse: rows 490..491 (active-low)
-//
-// Pitfalls:
-//   - Using 25 MHz instead of 25.175 MHz gives ~0.7 % frequency error;
-//     most monitors accept this. The Clocking Wizard MMCM can get very close.
-//   - Do NOT register 'active'; it must be combinational to align with
-//     the unregistered hcount/vcount used by the display scaler.
-// =============================================================================
+// 640x480 VGA timing generator.
+// hcount/vcount cover the full 800x525 frame, while active marks the visible
+// 640x480 area. Sync pulses are active low.
 
 module vga_controller (
-    input  wire        clk,      // 25 MHz pixel clock
-    input  wire        rst,      // synchronous active-high reset
-    output reg  [9:0]  hcount,   // 0..799
-    output reg  [9:0]  vcount,   // 0..524
-    output wire        hsync,    // active-low during sync pulse
-    output wire        vsync,    // active-low during sync pulse
-    output wire        active    // 1 when pixel is in 640x480 region
+    input  wire        clk,
+    input  wire        rst,
+    output reg  [9:0]  hcount,
+    output reg  [9:0]  vcount,
+    output wire        hsync,
+    output wire        vsync,
+    output wire        active
 );
 
-    // -----------------------------------------------------------------------
-    // VGA timing parameters
-    // -----------------------------------------------------------------------
     localparam H_ACTIVE   = 640;
-    localparam H_FP       = 16;    // front porch
-    localparam H_SYNC     = 96;    // sync pulse width
-    localparam H_BP       = 48;    // back porch
-    localparam H_TOTAL    = 800;   // H_ACTIVE + H_FP + H_SYNC + H_BP
+    localparam H_FP       = 16;
+    localparam H_SYNC     = 96;
+    localparam H_BP       = 48;
+    localparam H_TOTAL    = 800;
 
     localparam V_ACTIVE   = 480;
     localparam V_FP       = 10;
     localparam V_SYNC     = 2;
     localparam V_BP       = 33;
-    localparam V_TOTAL    = 525;   // V_ACTIVE + V_FP + V_SYNC + V_BP
+    localparam V_TOTAL    = 525;
 
-    // Sync pulse windows (beginning of each pulse)
-    localparam H_SYNC_START = H_ACTIVE + H_FP;           // 656
-    localparam H_SYNC_END   = H_ACTIVE + H_FP + H_SYNC;  // 752
-    localparam V_SYNC_START = V_ACTIVE + V_FP;           // 490
-    localparam V_SYNC_END   = V_ACTIVE + V_FP + V_SYNC;  // 492
+    localparam H_SYNC_START = H_ACTIVE + H_FP;
+    localparam H_SYNC_END   = H_ACTIVE + H_FP + H_SYNC;
+    localparam V_SYNC_START = V_ACTIVE + V_FP;
+    localparam V_SYNC_END   = V_ACTIVE + V_FP + V_SYNC;
 
-    // -----------------------------------------------------------------------
-    // Horizontal counter
-    // -----------------------------------------------------------------------
     always @(posedge clk) begin
         if (rst) begin
             hcount <= 10'd0;
@@ -73,9 +40,7 @@ module vga_controller (
         end
     end
 
-    // -----------------------------------------------------------------------
-    // Vertical counter — increments at end of each horizontal line
-    // -----------------------------------------------------------------------
+    // Increment the line counter at the end of each horizontal line.
     always @(posedge clk) begin
         if (rst) begin
             vcount <= 10'd0;
@@ -89,15 +54,9 @@ module vga_controller (
         end
     end
 
-    // -----------------------------------------------------------------------
-    // Sync outputs (active-low)
-    // -----------------------------------------------------------------------
     assign hsync  = ~((hcount >= H_SYNC_START) && (hcount < H_SYNC_END));
     assign vsync  = ~((vcount >= V_SYNC_START) && (vcount < V_SYNC_END));
 
-    // -----------------------------------------------------------------------
-    // Active region
-    // -----------------------------------------------------------------------
     assign active = (hcount < H_ACTIVE) && (vcount < V_ACTIVE);
 
 endmodule

@@ -1,38 +1,7 @@
-// =============================================================================
-// Module      : sccb_master
-// Purpose     : Implements a 3-wire SCCB write-only master compatible with
-//               the OV7670's serial camera control bus. Transmits 3-phase
-//               write cycles: [ID address | sub-address | data].
-//
-// Clock Domain: clk (system clock, any frequency ≥ 1 MHz)
-//               Internal clock divider generates ~100 kHz SCCB clock.
-//
-// Ports:
-//   clk        — system clock (100 MHz typical)
-//   rst        — synchronous active-high reset
-//   start      — pulse high for 1 cycle to begin a transaction
-//   dev_addr   — 7-bit SCCB device address (OV7670 = 7'h21)
-//   reg_addr   — 8-bit register address
-//   reg_data   — 8-bit data to write
-//   scl        — SCCB clock output
-//   sda        — SCCB data output (open-drain compatible; drive low or Z)
-//   done       — pulses high for 1 cycle when transaction is complete
-//   busy       — high while a transaction is in progress
-//
-// SCCB vs I2C differences:
-//   - No ACK/NAK bits are read back (don't-care phase instead of ACK)
-//   - SDA is only driven by master; no pull-up read-back required in RTL
-//   - Each write cycle: START, [8-bit ID addr + W bit], [8-bit reg addr],
-//                       [8-bit data], STOP
-//
-// Pitfalls:
-//   - The OV7670 requires ≥ 2 ms between SCCB writes (add delay in ov7670_config).
-//   - Driving SDA as a regular output (not open-drain) is acceptable in most
-//     FPGA systems because we only write; ensure the camera's SDA line has
-//     a pull-up resistor on the PCB.
-//   - SCL must be stable before SDA transitions (setup/hold respected here by
-//     toggling SDA only while SCL is low).
-// =============================================================================
+// Write-only SCCB master for OV7670 register configuration.
+// A transaction sends START, device write byte, register address, data, and STOP.
+// SDA is driven through top-level open-drain logic; this module does not sample
+// the external SDA pin for a real ACK.
 
 module sccb_master #(
     parameter CLK_FREQ   = 100_000_000,  // system clock frequency in Hz
@@ -41,30 +10,24 @@ module sccb_master #(
     input  wire       clk,
     input  wire       rst,
 
-    // Transaction interface
     input  wire       start,
-    input  wire [6:0] dev_addr,   // 7-bit device address
-    input  wire [7:0] reg_addr,   // 8-bit register address
-    input  wire [7:0] reg_data,   // 8-bit write data
+    input  wire [6:0] dev_addr,
+    input  wire [7:0] reg_addr,
+    input  wire [7:0] reg_data,
 
-    // SCCB pins
     output reg        scl,
     output reg        sda,
 
-    // Status
     output reg        done,
     output reg        busy,
-    output reg        ack_err    // High if a NAK is detected during any 9th bit
+    output reg        ack_err    // Legacy diagnostic; not a true external ACK check.
 );
 
-    // -----------------------------------------------------------------------
-    // Clock divider — generate quarter-period tick for SCL generation
-    // One SCL period = 4 ticks: low0, low1 (SDA change here), high0, high1
-    // -----------------------------------------------------------------------
-    localparam CLK_DIV = CLK_FREQ / (SCCB_FREQ * 4);  // quarter-period count
+    // One SCL period is four ticks so SDA can change while SCL is low.
+    localparam CLK_DIV = CLK_FREQ / (SCCB_FREQ * 4);
 
     reg [$clog2(CLK_DIV+1)-1:0] clk_cnt;
-    reg                          tick;   // 1-cycle pulse at each quarter period
+    reg                          tick;
 
     always @(posedge clk) begin
         if (rst) begin
@@ -81,27 +44,22 @@ module sccb_master #(
         end
     end
 
-    // -----------------------------------------------------------------------
-    // State machine
-    // -----------------------------------------------------------------------
     localparam ST_IDLE      = 4'd0;
-    localparam ST_START     = 4'd1;
-    localparam ST_ID        = 4'd2;  // transmit device address + W bit
-    localparam ST_DC_ID     = 4'd3;  // don't-care bit after ID byte
-    localparam ST_REG       = 4'd4;  // transmit register address
-    localparam ST_DC_REG    = 4'd5;  // don't-care bit after reg byte
-    localparam ST_DATA      = 4'd6;  // transmit data byte
-    localparam ST_DC_DATA   = 4'd7;  // don't-care bit after data byte
+    localparam ST_START     = 4'd1;  // START condition
+    localparam ST_ID        = 4'd2;  // device address + write bit
+    localparam ST_DC_ID     = 4'd3;  // SCCB don't-care bit
+    localparam ST_REG       = 4'd4;  // register address
+    localparam ST_DC_REG    = 4'd5;
+    localparam ST_DATA      = 4'd6;  // register data
+    localparam ST_DC_DATA   = 4'd7;
     localparam ST_STOP      = 4'd8;
     localparam ST_DONE      = 4'd9;
 
     reg [3:0]  state;
-    reg [3:0]  bit_cnt;   // counts 7..0 during byte transmission
-    reg [1:0]  phase;     // quarter-period phase: 0=SCL low, 1=SDA change,
-                          //                       2=SCL rise, 3=SCL high
-    reg [7:0]  tx_byte;   // current byte being shifted out
+    reg [3:0]  bit_cnt;
+    reg [1:0]  phase;
+    reg [7:0]  tx_byte;
 
-    // Assembled 8-bit ID byte = {dev_addr[6:0], 1'b0} (write)
     wire [7:0] id_byte = {dev_addr, 1'b0};
 
     always @(posedge clk) begin
@@ -116,10 +74,9 @@ module sccb_master #(
             phase   <= 2'd0;
             tx_byte <= 8'd0;
         end else begin
-            done <= 1'b0;  // default: done is a single-cycle pulse
+            done <= 1'b0;
 
             case (state)
-                // -----------------------------------------------------------
                 ST_IDLE: begin
                     scl     <= 1'b1;
                     sda     <= 1'b1;
@@ -134,14 +91,11 @@ module sccb_master #(
                     end
                 end
 
-                // -----------------------------------------------------------
-                // START condition: SDA falls while SCL is high
-                // -----------------------------------------------------------
                 ST_START: begin
                     if (tick) begin
                         case (phase)
                             2'd0: begin scl <= 1'b1; sda <= 1'b1; phase <= 2'd1; end
-                            2'd1: begin sda <= 1'b0; phase <= 2'd2; end   // SDA↓ while SCL=1
+                            2'd1: begin sda <= 1'b0; phase <= 2'd2; end
                             2'd2: begin scl <= 1'b0; phase <= 2'd3; end
                             2'd3: begin
                                 phase   <= 2'd0;
@@ -153,9 +107,7 @@ module sccb_master #(
                     end
                 end
 
-                // -----------------------------------------------------------
-                // Generic bit-by-bit byte transmit — reused for ID/REG/DATA
-                // -----------------------------------------------------------
+                // Shared byte transmitter for ID, register address, and data.
                 ST_ID, ST_REG, ST_DATA: begin
                     if (tick) begin
                         case (phase)
@@ -165,7 +117,6 @@ module sccb_master #(
                             2'd3: begin
                                 phase <= 2'd0;
                                 if (bit_cnt == 4'd0) begin
-                                    // move to don't-care phase
                                     case (state)
                                         ST_ID:   state <= ST_DC_ID;
                                         ST_REG:  state <= ST_DC_REG;
@@ -180,9 +131,8 @@ module sccb_master #(
                     end
                 end
 
-                // -----------------------------------------------------------
-                // Don't-care (9th bit) — SDA released (high); SCL pulses once
-                // -----------------------------------------------------------
+                // SCCB has a don't-care 9th bit. ack_err is retained for the
+                // old interface but only observes this internal SDA register.
                 ST_DC_ID, ST_DC_REG, ST_DC_DATA: begin
                     if (tick) begin
                         case (phase)
@@ -191,9 +141,8 @@ module sccb_master #(
                             2'd2: begin 
                                 scl <= 1'b1; 
                                 phase <= 2'd3;
-                                // Sample SDA during SCL high to check for ACK (0) or NAK (1)
                                 if (sda == 1'b1) begin
-                                    ack_err <= 1'b1; // Slave didn't pull SDA low
+                                    ack_err <= 1'b1;
                                 end
                             end
                             2'd3: begin
@@ -217,15 +166,12 @@ module sccb_master #(
                     end
                 end
 
-                // -----------------------------------------------------------
-                // STOP condition: SDA rises while SCL is high
-                // -----------------------------------------------------------
                 ST_STOP: begin
                     if (tick) begin
                         case (phase)
                             2'd0: begin scl <= 1'b0; sda <= 1'b0; phase <= 2'd1; end
                             2'd1: begin scl <= 1'b1; phase <= 2'd2; end
-                            2'd2: begin sda <= 1'b1; phase <= 2'd3; end   // SDA↑ while SCL=1
+                            2'd2: begin sda <= 1'b1; phase <= 2'd3; end
                             2'd3: begin
                                 phase <= 2'd0;
                                 state <= ST_DONE;
@@ -234,7 +180,6 @@ module sccb_master #(
                     end
                 end
 
-                // -----------------------------------------------------------
                 ST_DONE: begin
                     done  <= 1'b1;
                     busy  <= 1'b0;

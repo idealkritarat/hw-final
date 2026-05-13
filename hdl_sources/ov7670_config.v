@@ -1,14 +1,10 @@
-// Purpose     : Sequences all required SCCB write transactions to configure
-//               the OV7670 camera for RGB565 output at VGA (640x480).
-//
-// Clock Domain: clk (100 MHz system clock)
-// =============================================================================
+// Sequences the OV7670 register writes used by this design.
+// The SCCB master sends one {register, data} pair whenever sccb_start pulses.
 
 module ov7670_config (
     input  wire        clk,
     input  wire        rst,
 
-    // sccb_master interface
     input  wire        sccb_done,
     output reg         sccb_start,
     output reg  [7:0]  reg_addr,
@@ -17,24 +13,19 @@ module ov7670_config (
     output reg         cfg_done
 );
 
-    // -----------------------------------------------------------------------
-    // Register ROM — {addr, data} pairs
-    // -----------------------------------------------------------------------
-    localparam N_REGS = 69; // Optimized register list
+    localparam END_MARKER = 16'hFFFF;
+
     reg [15:0] current_reg;
     reg [6:0]  rom_idx;
 
     always @(*) begin
         case (rom_idx)
-            // 1. Soft Reset
             7'd0:  current_reg = {8'h12, 8'h80}; // COM7: soft reset
             
-            // 2. Clocking & PLL (60fps Target)
+            // Clocking and output format.
             7'd1:  current_reg = {8'h11, 8'h00}; // CLKRC: no divider
             7'd2:  current_reg = {8'h6b, 8'h4a}; // DBLV: PLL 4x
             7'd3:  current_reg = {8'h3b, 8'h0a}; // COM11: Night mode OFF
-            
-            // 3. Format & Scaling
             7'd4:  current_reg = {8'h12, 8'h04}; // COM7: RGB565 (VGA mode natively)
             7'd5:  current_reg = {8'h40, 8'hD0}; // COM15: RGB565 + Full Range
             7'd6:  current_reg = {8'h3a, 8'h04}; // TSLB
@@ -46,7 +37,7 @@ module ov7670_config (
             7'd12: current_reg = {8'h73, 8'hf1}; // SCALING_PCLK_DIV
             7'd13: current_reg = {8'ha2, 8'h02}; // SCALING_PCLK_DELAY
             
-            // 4. Windowing
+            // Sensor window.
             7'd14: current_reg = {8'h17, 8'h13}; // HSTART
             7'd15: current_reg = {8'h18, 8'h01}; // HSTOP
             7'd16: current_reg = {8'h32, 8'hbf}; // HREF
@@ -54,7 +45,7 @@ module ov7670_config (
             7'd18: current_reg = {8'h1a, 8'h7a}; // VSTOP
             7'd19: current_reg = {8'h03, 8'h0a}; // VREF
 
-            // 5. Color Matrix (Natural Colors High Saturation)
+            // Color, exposure, gamma, and image tuning.
             7'd20: current_reg = {8'h4f, 8'hb3}; // MTX1
             7'd21: current_reg = {8'h50, 8'hb3}; // MTX2
             7'd22: current_reg = {8'h51, 8'h00}; // MTX3
@@ -63,7 +54,6 @@ module ov7670_config (
             7'd25: current_reg = {8'h54, 8'he4}; // MTX6
             7'd26: current_reg = {8'h58, 8'h5e}; // MTXS: 0x5E = Manual Matrix Enable
 
-            // 6. AEC/AGC/AWB
             7'd27: current_reg = {8'h13, 8'hef}; // COM8: Enable AEC, AGC, AWB
             7'd28: current_reg = {8'h00, 8'h00}; // GAIN
             7'd29: current_reg = {8'h10, 8'h00}; // AECH
@@ -73,7 +63,6 @@ module ov7670_config (
             7'd33: current_reg = {8'h25, 8'h33}; // AEB
             7'd34: current_reg = {8'h26, 8'he3}; // VPT
 
-            // 7. Gamma Curve
             7'd35: current_reg = {8'h7a, 8'h20};
             7'd36: current_reg = {8'h7b, 8'h10};
             7'd37: current_reg = {8'h7c, 8'h1e};
@@ -91,7 +80,6 @@ module ov7670_config (
             7'd49: current_reg = {8'h88, 8'hd7};
             7'd50: current_reg = {8'h89, 8'he8};
 
-            // 8. DSP & Denoise
             7'd51: current_reg = {8'h41, 8'h38}; // COM16: Denoise + Edge enhancement + AWB gain ENABLED
             7'd52: current_reg = {8'h76, 8'he1}; // OV
             7'd53: current_reg = {8'h33, 8'h0b}; // CHLF
@@ -103,25 +91,20 @@ module ov7670_config (
             7'd59: current_reg = {8'hb2, 8'h0e}; // Reserved
             7'd60: current_reg = {8'hb3, 8'h82}; // Reserved
 
-            // 9. Saturation & Contrast
             7'd61: current_reg = {8'h67, 8'hc0}; // U gain (Saturation Boost)
             7'd62: current_reg = {8'h68, 8'hc0}; // V gain (Saturation Boost)
             7'd63: current_reg = {8'h56, 8'h40}; // Contrast
             
-            // 10. Frame Stability & Color
             7'd64: current_reg = {8'h15, 8'h00}; // COM10
             7'd65: current_reg = {8'h0e, 8'h61}; // COM6
             7'd66: current_reg = {8'h16, 8'h00}; // Reserved
             7'd67: current_reg = {8'h1e, 8'h07}; // MVFP
             7'd68: current_reg = {8'h3d, 8'hc0}; // COM13: Gamma Enable
             
-            default: current_reg = {8'hFF, 8'hFF};
+            default: current_reg = END_MARKER;
         endcase
     end
 
-    // -----------------------------------------------------------------------
-    // Sequencer — wait after soft reset, then write all registers
-    // -----------------------------------------------------------------------
     localparam RESET_WAIT = 200_000;
 
     reg [17:0] wait_cnt;
@@ -143,7 +126,7 @@ module ov7670_config (
             cfg_done    <= 1'b0;
             wait_cnt    <= 18'd0;
         end else begin
-            sccb_start <= 1'b0;  // default
+            sccb_start <= 1'b0;
 
             case (state)
                 S_RESET_WAIT: begin
@@ -156,7 +139,7 @@ module ov7670_config (
                 end
 
                 S_START_TX: begin
-                    if (current_reg == 16'hFFFF) begin
+                    if (current_reg == END_MARKER) begin
                         cfg_done <= 1'b1;
                         state    <= S_DONE;
                     end else begin
