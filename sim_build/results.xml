@@ -1,0 +1,13 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1778666358" />
+    <testcase name="test_raw_passthrough" classname="test_filter_engine" file="/Users/santa.ntw/Desktop/4th-Semester/hardware-sys-lab/hw-final/sim/test_filter_engine.py" lineno="42" time="0.001875162124633789" sim_time_ns="7.0" ratio_time="3733.0105530832802" />
+    <testcase name="test_grayscale_white" classname="test_filter_engine" file="/Users/santa.ntw/Desktop/4th-Semester/hardware-sys-lab/hw-final/sim/test_filter_engine.py" lineno="54" time="5.1021575927734375e-05" sim_time_ns="0.9999999999999991" ratio_time="19599.551401869143" />
+    <testcase name="test_grayscale_black" classname="test_filter_engine" file="/Users/santa.ntw/Desktop/4th-Semester/hardware-sys-lab/hw-final/sim/test_filter_engine.py" lineno="66" time="4.6253204345703125e-05" sim_time_ns="1.0" ratio_time="21620.123711340206" />
+    <testcase name="test_grayscale_pure_red" classname="test_filter_engine" file="/Users/santa.ntw/Desktop/4th-Semester/hardware-sys-lab/hw-final/sim/test_filter_engine.py" lineno="77" time="3.981590270996094e-05" sim_time_ns="1.0" ratio_time="25115.59281437126" />
+    <testcase name="test_grayscale_several_pixels" classname="test_filter_engine" file="/Users/santa.ntw/Desktop/4th-Semester/hardware-sys-lab/hw-final/sim/test_filter_engine.py" lineno="89" time="0.0001881122589111328" sim_time_ns="7.000000000000002" ratio_time="37211.822560202796" />
+    <testcase name="test_red_only" classname="test_filter_engine" file="/Users/santa.ntw/Desktop/4th-Semester/hardware-sys-lab/hw-final/sim/test_filter_engine.py" lineno="104" time="0.00013899803161621094" sim_time_ns="4.0" ratio_time="28777.385934819897" />
+    <testcase name="test_inversion" classname="test_filter_engine" file="/Users/santa.ntw/Desktop/4th-Semester/hardware-sys-lab/hw-final/sim/test_filter_engine.py" lineno="123" time="0.00016808509826660156" sim_time_ns="6.0" ratio_time="35696.20425531915" />
+    <testcase name="test_switch_transitions" classname="test_filter_engine" file="/Users/santa.ntw/Desktop/4th-Semester/hardware-sys-lab/hw-final/sim/test_filter_engine.py" lineno="138" time="0.0001289844512939453" sim_time_ns="4.0" ratio_time="31011.489833641404" />
+  </testsuite>
+</testsuites>

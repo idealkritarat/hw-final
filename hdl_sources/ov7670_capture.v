@@ -29,6 +29,7 @@ module ov7670_capture #(
     always @(negedge pclk) begin
         if (rst) begin
             wr_addr    <= 17'd0;
+            wr_data    <= 16'd0;
             byte_cnt   <= 1'b0;
             wr_en      <= 1'b0;
             frame_done <= 1'b0;
