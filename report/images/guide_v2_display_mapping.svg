@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="980" viewBox="0 0 1800 980">
+  <defs>
+    <marker id="arrow" markerWidth="16" markerHeight="12" refX="15" refY="6" orient="auto"><path d="M0,0 L16,6 L0,12 Z" fill="#2563eb"/></marker>
+    <style>
+      .bg{fill:#f8fafc}.panel{fill:#fff;stroke:#cbd5e1;stroke-width:3}.title{font:700 42px Arial,sans-serif;fill:#111827}.sub{font:24px Arial,sans-serif;fill:#475569}.head{font:700 30px Arial,sans-serif;fill:#111827}.body{font:23px Arial,sans-serif;fill:#334155}.small{font:20px Arial,sans-serif;fill:#475569}.screen{fill:#ffedd5;stroke:#ea580c;stroke-width:4}.img{fill:#dbeafe;stroke:#2563eb;stroke-width:4}.mem{fill:#ede9fe;stroke:#7c3aed;stroke-width:4}.line{fill:none;stroke:#2563eb;stroke-width:6;marker-end:url(#arrow)}.note{fill:#f1f5f9;stroke:#94a3b8;stroke-width:3}
+    </style>
+  </defs>
+  <rect class="bg" width="1800" height="980"/>
+  <text class="title" x="60" y="75">Display Mapping: Screen Coordinate to BRAM Address</text>
+  <text class="sub" x="60" y="115">display_scaler.v chooses which stored camera pixel appears at each VGA screen pixel.</text>
+  <rect class="panel" x="45" y="145" width="1710" height="765" rx="24"/>
+
+  <rect class="screen" x="115" y="225" width="520" height="360" rx="16"/>
+  <text class="head" x="375" y="270" text-anchor="middle">640 x 480 VGA screen</text>
+  <rect class="img" x="230" y="300" width="292" height="240" rx="8"/>
+  <text class="body" x="376" y="415" text-anchor="middle">centered 360 x 480</text>
+  <text class="body" x="376" y="450" text-anchor="middle">display window</text>
+  <text class="small" x="178" y="620" text-anchor="middle">140 px</text>
+  <text class="small" x="574" y="620" text-anchor="middle">140 px</text>
+
+  <rect class="note" x="760" y="205" width="400" height="140" rx="18"/>
+  <text class="head" x="960" y="250" text-anchor="middle">1. Window test</text>
+  <text class="body" x="960" y="292" text-anchor="middle">hcount 140..499</text>
+  <text class="body" x="960" y="322" text-anchor="middle">vcount 0..479</text>
+
+  <rect class="note" x="760" y="405" width="400" height="140" rx="18"/>
+  <text class="head" x="960" y="450" text-anchor="middle">2. Scale down</text>
+  <text class="body" x="960" y="492" text-anchor="middle">multiply by 171</text>
+  <text class="body" x="960" y="522" text-anchor="middle">then shift right 8</text>
+
+  <rect class="note" x="760" y="605" width="400" height="140" rx="18"/>
+  <text class="head" x="960" y="650" text-anchor="middle">3. Rotate/mirror</text>
+  <text class="body" x="960" y="692" text-anchor="middle">img_x = rot_y</text>
+  <text class="body" x="960" y="722" text-anchor="middle">img_y = rot_x</text>
+
+  <rect class="mem" x="1290" y="310" width="350" height="250" rx="20"/>
+  <text class="head" x="1465" y="360" text-anchor="middle">BRAM image</text>
+  <text class="body" x="1465" y="405" text-anchor="middle">320 x 240</text>
+  <text class="body" x="1465" y="445" text-anchor="middle">addr = img_y * 320</text>
+  <text class="body" x="1465" y="478" text-anchor="middle">+ img_x</text>
+  <text class="body" x="1465" y="525" text-anchor="middle">outputs rd_data</text>
+
+  <path class="line" d="M635 405 L745 275"/>
+  <path class="line" d="M1160 275 L1280 410"/>
+  <path class="line" d="M1160 475 L1280 435"/>
+  <path class="line" d="M1160 675 L1280 465"/>
+
+  <rect class="note" x="210" y="765" width="1380" height="90" rx="18"/>
+  <text class="head" x="900" y="805" text-anchor="middle">Output RGB is gated with frame_valid</text>
+  <text class="body" x="900" y="838" text-anchor="middle">Before the first full captured frame, VGA RGB is forced to black instead of showing uninitialized BRAM.</text>
+</svg>

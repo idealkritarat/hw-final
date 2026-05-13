@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="980" viewBox="0 0 1800 980">
+  <style>
+    .bg{fill:#f8fafc}.panel{fill:#fff;stroke:#cbd5e1;stroke-width:3}.title{font:700 42px Arial,sans-serif;fill:#111827}.sub{font:24px Arial,sans-serif;fill:#475569}.head{font:700 30px Arial,sans-serif;fill:#111827}.body{font:23px Arial,sans-serif;fill:#334155}.small{font:20px Arial,sans-serif;fill:#475569}.active{fill:#dbeafe;stroke:#2563eb;stroke-width:3}.porch{fill:#e5e7eb;stroke:#64748b;stroke-width:3}.sync{fill:#fee2e2;stroke:#dc2626;stroke-width:3}.note{fill:#ffedd5;stroke:#ea580c;stroke-width:3}
+  </style>
+  <rect class="bg" width="1800" height="980"/>
+  <text class="title" x="60" y="75">VGA Timing: What vga_controller.v Counts</text>
+  <text class="sub" x="60" y="115">The monitor needs visible pixels plus blanking time and active-low sync pulses.</text>
+  <rect class="panel" x="45" y="145" width="1710" height="765" rx="24"/>
+
+  <text class="head" x="110" y="220">Horizontal line: hcount 0..799</text>
+  <rect class="active" x="110" y="270" width="960" height="105" rx="8"/>
+  <text class="head" x="590" y="333" text-anchor="middle">640 active pixels</text>
+  <rect class="porch" x="1070" y="270" width="80" height="105"/>
+  <text class="body" x="1110" y="333" text-anchor="middle">16</text>
+  <rect class="sync" x="1150" y="270" width="300" height="105"/>
+  <text class="head" x="1300" y="333" text-anchor="middle">96 HSYNC low</text>
+  <rect class="porch" x="1450" y="270" width="150" height="105"/>
+  <text class="body" x="1525" y="333" text-anchor="middle">48</text>
+  <text class="small" x="855" y="420" text-anchor="middle">640 + 16 + 96 + 48 = 800 pixel clocks per line</text>
+
+  <text class="head" x="110" y="525">Vertical frame: vcount 0..524</text>
+  <rect class="active" x="110" y="575" width="960" height="105" rx="8"/>
+  <text class="head" x="590" y="638" text-anchor="middle">480 active lines</text>
+  <rect class="porch" x="1070" y="575" width="80" height="105"/>
+  <text class="body" x="1110" y="638" text-anchor="middle">10</text>
+  <rect class="sync" x="1150" y="575" width="95" height="105"/>
+  <text class="body" x="1197" y="638" text-anchor="middle">2</text>
+  <rect class="porch" x="1245" y="575" width="355" height="105"/>
+  <text class="head" x="1422" y="638" text-anchor="middle">33 back porch</text>
+  <text class="small" x="855" y="725" text-anchor="middle">480 + 10 + 2 + 33 = 525 lines per frame</text>
+
+  <rect class="note" x="260" y="795" width="1280" height="85" rx="18"/>
+  <text class="head" x="900" y="832" text-anchor="middle">25 MHz / (800 x 525) = about 59.5 frames per second</text>
+  <text class="body" x="900" y="866" text-anchor="middle">Most VGA monitors accept this small difference from the 25.175 MHz standard.</text>
+</svg>

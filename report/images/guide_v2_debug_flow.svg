@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="980" viewBox="0 0 1800 980">
+  <defs>
+    <marker id="arrow" markerWidth="16" markerHeight="12" refX="15" refY="6" orient="auto"><path d="M0,0 L16,6 L0,12 Z" fill="#2563eb"/></marker>
+    <style>
+      .bg{fill:#f8fafc}.panel{fill:#fff;stroke:#cbd5e1;stroke-width:3}.title{font:700 42px Arial,sans-serif;fill:#111827}.sub{font:24px Arial,sans-serif;fill:#475569}.head{font:700 28px Arial,sans-serif;fill:#111827}.body{font:22px Arial,sans-serif;fill:#334155}.small{font:19px Arial,sans-serif;fill:#475569}.a{fill:#fef3c7;stroke:#d97706;stroke-width:4}.b{fill:#dcfce7;stroke:#16a34a;stroke-width:4}.c{fill:#ede9fe;stroke:#7c3aed;stroke-width:4}.d{fill:#ffedd5;stroke:#ea580c;stroke-width:4}.e{fill:#dbeafe;stroke:#2563eb;stroke-width:4}.line{fill:none;stroke:#2563eb;stroke-width:6;marker-end:url(#arrow)}.note{fill:#f1f5f9;stroke:#94a3b8;stroke-width:3}
+    </style>
+  </defs>
+  <rect class="bg" width="1800" height="980"/>
+  <text class="title" x="60" y="75">Debug Flow: Check the Design Left to Right</text>
+  <text class="sub" x="60" y="115">A later block cannot work if the earlier block is dead.</text>
+  <rect class="panel" x="45" y="145" width="1710" height="765" rx="24"/>
+
+  <rect class="a" x="90" y="270" width="210" height="145" rx="18"/>
+  <text class="head" x="195" y="315" text-anchor="middle">1. Clocks</text>
+  <text class="body" x="195" y="352" text-anchor="middle">pll_locked</text>
+  <text class="body" x="195" y="383" text-anchor="middle">pixel_clk</text>
+
+  <rect class="a" x="360" y="270" width="210" height="145" rx="18"/>
+  <text class="head" x="465" y="315" text-anchor="middle">2. Config</text>
+  <text class="body" x="465" y="352" text-anchor="middle">cam_scl</text>
+  <text class="body" x="465" y="383" text-anchor="middle">cam_sda</text>
+
+  <rect class="b" x="630" y="270" width="210" height="145" rx="18"/>
+  <text class="head" x="735" y="315" text-anchor="middle">3. Camera</text>
+  <text class="body" x="735" y="352" text-anchor="middle">PCLK/HREF</text>
+  <text class="body" x="735" y="383" text-anchor="middle">VSYNC/D[7:0]</text>
+
+  <rect class="b" x="900" y="270" width="210" height="145" rx="18"/>
+  <text class="head" x="1005" y="315" text-anchor="middle">4. Capture</text>
+  <text class="body" x="1005" y="352" text-anchor="middle">wr_en</text>
+  <text class="body" x="1005" y="383" text-anchor="middle">wr_addr/data</text>
+
+  <rect class="c" x="1170" y="270" width="210" height="145" rx="18"/>
+  <text class="head" x="1275" y="315" text-anchor="middle">5. BRAM</text>
+  <text class="body" x="1275" y="352" text-anchor="middle">rd_addr</text>
+  <text class="body" x="1275" y="383" text-anchor="middle">rd_data</text>
+
+  <rect class="d" x="1440" y="270" width="210" height="145" rx="18"/>
+  <text class="head" x="1545" y="315" text-anchor="middle">6. VGA</text>
+  <text class="body" x="1545" y="352" text-anchor="middle">hcount/vcount</text>
+  <text class="body" x="1545" y="383" text-anchor="middle">sync/RGB</text>
+
+  <path class="line" d="M300 343 L345 343"/>
+  <path class="line" d="M570 343 L615 343"/>
+  <path class="line" d="M840 343 L885 343"/>
+  <path class="line" d="M1110 343 L1155 343"/>
+  <path class="line" d="M1380 343 L1425 343"/>
+
+  <rect class="note" x="170" y="565" width="1460" height="220" rx="22"/>
+  <text class="head" x="900" y="620" text-anchor="middle">Useful rule while debugging</text>
+  <text class="body" x="900" y="670" text-anchor="middle">If VGA sync is correct but the image is black, check frame_valid and rd_data.</text>
+  <text class="body" x="900" y="708" text-anchor="middle">If rd_data never changes, check capture writes and camera HREF/PCLK first.</text>
+  <text class="body" x="900" y="746" text-anchor="middle">If camera signals are missing, check SCCB configuration and camera clock/reset wiring.</text>
+</svg>

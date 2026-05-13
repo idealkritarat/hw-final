@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="980" viewBox="0 0 1800 980">
+  <style>
+    .bg{fill:#f8fafc}.panel{fill:#fff;stroke:#cbd5e1;stroke-width:3}.title{font:700 42px Arial,sans-serif;fill:#111827}.sub{font:24px Arial,sans-serif;fill:#475569}.head{font:700 28px Arial,sans-serif;fill:#111827}.body{font:21px Arial,sans-serif;fill:#334155}.small{font:18px Arial,sans-serif;fill:#475569}.clock{fill:#fee2e2;stroke:#dc2626;stroke-width:4}.cam{fill:#dcfce7;stroke:#16a34a;stroke-width:4}.vga{fill:#ffedd5;stroke:#ea580c;stroke-width:4}.io{fill:#dbeafe;stroke:#2563eb;stroke-width:4}.note{fill:#f1f5f9;stroke:#94a3b8;stroke-width:3}
+  </style>
+  <rect class="bg" width="1800" height="980"/>
+  <text class="title" x="60" y="75">constraints.xdc: Physical Pin Map</text>
+  <text class="sub" x="60" y="115">This file tells Vivado which FPGA package pin each top-level Verilog port uses.</text>
+  <rect class="panel" x="45" y="145" width="1710" height="765" rx="24"/>
+
+  <rect class="clock" x="95" y="210" width="360" height="180" rx="20"/>
+  <text class="head" x="275" y="255" text-anchor="middle">System</text>
+  <text class="body" x="275" y="300" text-anchor="middle">clk_100mhz -> W5</text>
+  <text class="body" x="275" y="335" text-anchor="middle">rst -> U18</text>
+  <text class="small" x="275" y="370" text-anchor="middle">create_clock period 10 ns</text>
+
+  <rect class="cam" x="530" y="210" width="540" height="260" rx="20"/>
+  <text class="head" x="800" y="255" text-anchor="middle">OV7670 Camera Pins</text>
+  <text class="body" x="800" y="300" text-anchor="middle">cam_d[0..7] -> P17 N17 M19 M18 L17 K17 C16 B16</text>
+  <text class="body" x="800" y="335" text-anchor="middle">HREF A17, PCLK A16, VSYNC B15</text>
+  <text class="body" x="800" y="370" text-anchor="middle">XCLK C15, SCL A14, SDA A15</text>
+  <text class="body" x="800" y="405" text-anchor="middle">PWDN R18, RST_N P18</text>
+  <text class="small" x="800" y="445" text-anchor="middle">cam_pclk constrained as 25 MHz worst case</text>
+
+  <rect class="vga" x="1145" y="210" width="560" height="260" rx="20"/>
+  <text class="head" x="1425" y="255" text-anchor="middle">VGA Pins</text>
+  <text class="body" x="1425" y="300" text-anchor="middle">vga_r[0..3] -> G19 H19 J19 N19</text>
+  <text class="body" x="1425" y="335" text-anchor="middle">vga_g[0..3] -> J17 H17 G17 D17</text>
+  <text class="body" x="1425" y="370" text-anchor="middle">vga_b[0..3] -> N18 L18 K18 J18</text>
+  <text class="body" x="1425" y="405" text-anchor="middle">HSYNC P19, VSYNC R19</text>
+  <text class="small" x="1425" y="445" text-anchor="middle">digital pins feed Basys 3 resistor-ladder VGA DAC</text>
+
+  <rect class="io" x="255" y="585" width="460" height="150" rx="20"/>
+  <text class="head" x="485" y="630" text-anchor="middle">User controls</text>
+  <text class="body" x="485" y="675" text-anchor="middle">sw[0] -> V17, sw[1] -> V16</text>
+  <text class="body" x="485" y="710" text-anchor="middle">led[0..2] -> U16 E19 U19</text>
+
+  <rect class="note" x="835" y="585" width="700" height="150" rx="20"/>
+  <text class="head" x="1185" y="630" text-anchor="middle">Clock groups</text>
+  <text class="body" x="1185" y="675" text-anchor="middle">sys_clk_100mhz, pixel_clk, and cam_pclk are asynchronous</text>
+  <text class="body" x="1185" y="710" text-anchor="middle">Vivado should not time normal paths directly between them</text>
+</svg>

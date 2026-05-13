@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="980" viewBox="0 0 1800 980">
+  <style>
+    .bg{fill:#f8fafc}.panel{fill:#fff;stroke:#cbd5e1;stroke-width:3}.title{font:700 42px Arial,sans-serif;fill:#111827}.sub{font:24px Arial,sans-serif;fill:#475569}.head{font:700 25px Arial,sans-serif;fill:#111827}.body{font:20px Arial,sans-serif;fill:#334155}.small{font:18px Arial,sans-serif;fill:#475569}.top{fill:#e0f2fe;stroke:#0284c7;stroke-width:4}.cam{fill:#dcfce7;stroke:#16a34a;stroke-width:4}.cfg{fill:#fef3c7;stroke:#d97706;stroke-width:4}.mem{fill:#ede9fe;stroke:#7c3aed;stroke-width:4}.disp{fill:#ffedd5;stroke:#ea580c;stroke-width:4}.pin{fill:#f1f5f9;stroke:#64748b;stroke-width:4}
+  </style>
+  <rect class="bg" width="1800" height="980"/>
+  <text class="title" x="60" y="75">hdl_sources/ File Map</text>
+  <text class="sub" x="60" y="115">Every source file has one clear responsibility. Read them in this order.</text>
+  <rect class="panel" x="45" y="145" width="1710" height="765" rx="24"/>
+
+  <rect class="top" x="105" y="205" width="480" height="150" rx="18"/>
+  <text class="head" x="345" y="248" text-anchor="middle">1. top.v</text>
+  <text class="body" x="345" y="286" text-anchor="middle">connects every module</text>
+  <text class="small" x="345" y="320" text-anchor="middle">clocks, reset, CDC, camera, BRAM, VGA</text>
+
+  <rect class="pin" x="685" y="205" width="480" height="150" rx="18"/>
+  <text class="head" x="925" y="248" text-anchor="middle">2. constraints.xdc</text>
+  <text class="body" x="925" y="286" text-anchor="middle">maps Verilog ports to Basys 3 pins</text>
+  <text class="small" x="925" y="320" text-anchor="middle">camera pins, VGA pins, switches, clocks</text>
+
+  <rect class="cfg" x="1265" y="205" width="430" height="150" rx="18"/>
+  <text class="head" x="1480" y="248" text-anchor="middle">3. ov7670_config.v</text>
+  <text class="body" x="1480" y="286" text-anchor="middle">camera register sequence</text>
+  <text class="small" x="1480" y="320" text-anchor="middle">69 writes, 2 ms delay per write</text>
+
+  <rect class="cfg" x="105" y="420" width="480" height="150" rx="18"/>
+  <text class="head" x="345" y="463" text-anchor="middle">4. sccb_master.v</text>
+  <text class="body" x="345" y="501" text-anchor="middle">serial bus engine</text>
+  <text class="small" x="345" y="535" text-anchor="middle">START, ID, register, data, STOP</text>
+
+  <rect class="cam" x="685" y="420" width="480" height="150" rx="18"/>
+  <text class="head" x="925" y="463" text-anchor="middle">5. ov7670_capture.v</text>
+  <text class="body" x="925" y="501" text-anchor="middle">camera bytes to BRAM writes</text>
+  <text class="small" x="925" y="535" text-anchor="middle">pack RGB565, crop, downsample</text>
+
+  <rect class="mem" x="1265" y="420" width="430" height="150" rx="18"/>
+  <text class="head" x="1480" y="463" text-anchor="middle">6. frame_buffer.v</text>
+  <text class="body" x="1480" y="501" text-anchor="middle">dual-port image memory</text>
+  <text class="small" x="1480" y="535" text-anchor="middle">Xilinx BRAM IP + sim RAM model</text>
+
+  <rect class="disp" x="105" y="635" width="480" height="150" rx="18"/>
+  <text class="head" x="345" y="678" text-anchor="middle">7. vga_controller.v</text>
+  <text class="body" x="345" y="716" text-anchor="middle">VGA timing counters</text>
+  <text class="small" x="345" y="750" text-anchor="middle">hcount, vcount, HSYNC, VSYNC, active</text>
+
+  <rect class="disp" x="685" y="635" width="480" height="150" rx="18"/>
+  <text class="head" x="925" y="678" text-anchor="middle">8. display_scaler.v</text>
+  <text class="body" x="925" y="716" text-anchor="middle">screen pixel to BRAM address</text>
+  <text class="small" x="925" y="750" text-anchor="middle">center, scale, rotate, mirror, gate output</text>
+
+  <rect class="disp" x="1265" y="635" width="430" height="150" rx="18"/>
+  <text class="head" x="1480" y="678" text-anchor="middle">9. filter_engine.v</text>
+  <text class="body" x="1480" y="716" text-anchor="middle">combinational pixel filter</text>
+  <text class="small" x="1480" y="750" text-anchor="middle">raw, grayscale, red-only, invert</text>
+
+  <text class="small" x="900" y="865" text-anchor="middle">Best reading order: top-level wiring first, then camera config, capture, memory, VGA display, and finally pin constraints.</text>
+</svg>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="980" viewBox="0 0 1800 980">
+  <defs>
+    <marker id="blueArrow" markerWidth="16" markerHeight="12" refX="15" refY="6" orient="auto"><path d="M0,0 L16,6 L0,12 Z" fill="#2563eb"/></marker>
+    <marker id="orangeArrow" markerWidth="16" markerHeight="12" refX="15" refY="6" orient="auto"><path d="M0,0 L16,6 L0,12 Z" fill="#d97706"/></marker>
+    <style>
+      .bg{fill:#f8fafc}.panel{fill:#fff;stroke:#cbd5e1;stroke-width:3}.title{font:700 42px Arial,sans-serif;fill:#111827}.sub{font:24px Arial,sans-serif;fill:#475569}.head{font:700 30px Arial,sans-serif;fill:#111827}.body{font:23px Arial,sans-serif;fill:#334155}.small{font:20px Arial,sans-serif;fill:#475569}.cam{fill:#dcfce7;stroke:#16a34a;stroke-width:4}.cap{fill:#dbeafe;stroke:#2563eb;stroke-width:4}.mem{fill:#ede9fe;stroke:#7c3aed;stroke-width:4}.disp{fill:#ffedd5;stroke:#ea580c;stroke-width:4}.ctrl{fill:#fef3c7;stroke:#d97706;stroke-width:4}.line{fill:none;stroke:#2563eb;stroke-width:6;marker-end:url(#blueArrow)}.cline{fill:none;stroke:#d97706;stroke-width:6;marker-end:url(#orangeArrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1800" height="980"/>
+  <text class="title" x="60" y="75">System Architecture</text>
+  <text class="sub" x="60" y="115">The project has two paths: configure the camera, then move live video through the FPGA.</text>
+  <rect class="panel" x="45" y="145" width="1710" height="765" rx="24"/>
+
+  <rect class="ctrl" x="280" y="205" width="330" height="120" rx="18"/>
+  <text class="head" x="445" y="250" text-anchor="middle">ov7670_config</text>
+  <text class="body" x="445" y="287" text-anchor="middle">register list</text>
+  <text class="body" x="445" y="315" text-anchor="middle">2 ms wait per write</text>
+
+  <rect class="ctrl" x="725" y="205" width="330" height="120" rx="18"/>
+  <text class="head" x="890" y="250" text-anchor="middle">sccb_master</text>
+  <text class="body" x="890" y="287" text-anchor="middle">100 kHz SCCB</text>
+  <text class="body" x="890" y="315" text-anchor="middle">writes camera regs</text>
+
+  <rect class="cam" x="95" y="455" width="250" height="150" rx="20"/>
+  <text class="head" x="220" y="505" text-anchor="middle">OV7670</text>
+  <text class="body" x="220" y="545" text-anchor="middle">8-bit bytes</text>
+  <text class="body" x="220" y="575" text-anchor="middle">PCLK/HREF/VSYNC</text>
+
+  <rect class="cap" x="430" y="455" width="260" height="150" rx="20"/>
+  <text class="head" x="560" y="498" text-anchor="middle">capture</text>
+  <text class="body" x="560" y="537" text-anchor="middle">2 bytes to pixel</text>
+  <text class="body" x="560" y="568" text-anchor="middle">crop + downsample</text>
+
+  <rect class="mem" x="775" y="435" width="300" height="190" rx="20"/>
+  <text class="head" x="925" y="485" text-anchor="middle">frame_buffer</text>
+  <text class="body" x="925" y="525" text-anchor="middle">true dual-port BRAM</text>
+  <text class="body" x="925" y="556" text-anchor="middle">320 x 240 x 16</text>
+  <text class="body" x="925" y="587" text-anchor="middle">safe clock boundary</text>
+
+  <rect class="disp" x="1160" y="455" width="270" height="150" rx="20"/>
+  <text class="head" x="1295" y="498" text-anchor="middle">display_scaler</text>
+  <text class="body" x="1295" y="537" text-anchor="middle">address mapping</text>
+  <text class="body" x="1295" y="568" text-anchor="middle">rotate + center</text>
+
+  <rect class="disp" x="1505" y="455" width="200" height="150" rx="20"/>
+  <text class="head" x="1605" y="498" text-anchor="middle">VGA</text>
+  <text class="body" x="1605" y="537" text-anchor="middle">RGB[3:0]</text>
+  <text class="body" x="1605" y="568" text-anchor="middle">sync pulses</text>
+
+  <path class="cline" d="M610 265 L710 265"/>
+  <text class="small" x="660" y="245" text-anchor="middle">addr/data</text>
+  <path class="cline" d="M780 325 C660 405 410 360 250 445"/>
+  <text class="small" x="520" y="390" text-anchor="middle">SCCB initializes camera</text>
+
+  <path class="line" d="M345 530 L415 530"/>
+  <text class="small" x="380" y="506" text-anchor="middle">bytes</text>
+  <path class="line" d="M690 530 L760 530"/>
+  <text class="small" x="725" y="506" text-anchor="middle">writes</text>
+  <path class="line" d="M1075 530 L1145 530"/>
+  <text class="small" x="1110" y="506" text-anchor="middle">reads</text>
+  <path class="line" d="M1430 530 L1490 530"/>
+
+  <rect class="panel" x="130" y="710" width="1540" height="130" rx="18"/>
+  <text class="head" x="170" y="755">Main idea</text>
+  <text class="body" x="170" y="797">The camera and VGA run on different clocks. The frame buffer is the handoff point.</text>
+  <text class="body" x="170" y="828">The display remains black until frame_valid confirms that at least one full frame was captured.</text>
+</svg>
